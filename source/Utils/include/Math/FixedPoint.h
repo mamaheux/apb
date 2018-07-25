@@ -18,7 +18,7 @@ namespace apb
 
 	public:
 		FixedPoint();
-		FixedPoint(int32_t valueQ15_16);
+		explicit FixedPoint(int32_t fixedPointValue);
 		FixedPoint(float value);
 		FixedPoint(double value);
 		FixedPoint(const FixedPoint& other);
@@ -31,6 +31,7 @@ namespace apb
 		FixedPoint& operator+=(const FixedPoint& other);
 		FixedPoint& operator-=(const FixedPoint& other);
 		FixedPoint& operator*=(const FixedPoint& other);
+		FixedPoint& operator/=(const FixedPoint& other);
 
 		FixedPoint& operator++();
 		FixedPoint operator++(int dummy);
@@ -41,13 +42,14 @@ namespace apb
 
 	private:
 		static int32_t multiplyFixedPoint(int32_t left, int32_t right);
+		static int32_t divideFixedPoint(int32_t left, int32_t right);
 		static int32_t sign(int32_t value);
 		static int32_t abs(int32_t value);
 
 		friend FixedPoint operator+(const FixedPoint& left, const FixedPoint& right);
 		friend FixedPoint operator-(const FixedPoint& left, const FixedPoint& right);
 		friend FixedPoint operator*(const FixedPoint& left, const FixedPoint& right);
-
+		friend FixedPoint operator/(const FixedPoint& left, const FixedPoint& right);
 
 		friend bool operator==(const FixedPoint& left, const FixedPoint& right);
 		friend bool operator!=(const FixedPoint& left, const FixedPoint& right);
@@ -63,7 +65,7 @@ namespace apb
 	{
 	}
 
-	inline FixedPoint::FixedPoint(int32_t valueQ15_16) : m_value(valueQ15_16)
+	inline FixedPoint::FixedPoint(int32_t fixedPointValue) : m_value(fixedPointValue)
 	{
 	}
 
@@ -115,6 +117,12 @@ namespace apb
 		return *this;
 	}
 
+	inline FixedPoint& FixedPoint::operator/=(const FixedPoint& other)
+	{
+		m_value = divideFixedPoint(m_value, other.m_value);
+		return *this;
+	}
+
 	inline FixedPoint& FixedPoint::operator++()
 	{
 		m_value += Q15_16OneValue;
@@ -161,6 +169,11 @@ namespace apb
 		return FixedPoint(FixedPoint::multiplyFixedPoint(left.m_value, right.m_value));
 	}
 
+	inline FixedPoint operator/(const FixedPoint& left, const FixedPoint& right)
+	{
+		return FixedPoint(FixedPoint::divideFixedPoint(left.m_value, right.m_value));
+	}
+
 	inline bool operator==(const FixedPoint& left, const FixedPoint& right)
 	{
 		return left.m_value == right.m_value;
@@ -203,6 +216,11 @@ namespace apb
 	inline int32_t FixedPoint::multiplyFixedPoint(int32_t left, int32_t right)
 	{
 		return static_cast<int32_t>((static_cast<int64_t>(left) * static_cast<int64_t>(right)) >> FractionSize);
+	}
+
+	inline int32_t FixedPoint::divideFixedPoint(int32_t left, int32_t right)
+	{
+		return static_cast<int32_t>((static_cast<int64_t>(left) << FractionSize) / static_cast<int64_t>(right));
 	}
 
 	inline int32_t FixedPoint::sign(int32_t value)

@@ -18,7 +18,7 @@ TEST(FixedPointTests, defaultConstructor_shouldSetTheValueTo0)
 	EXPECT_EQ(ss.str(), "0");
 }
 
-TEST(FixedPointTests, q15_16Constructor_positive_shouldSetTheRightValue)
+TEST(FixedPointTests, fixedPointConstructor_positive_shouldSetTheRightValue)
 {
 	stringstream ss;
 	FixedPoint testee((1 << 16) + (1 << 15));
@@ -28,7 +28,7 @@ TEST(FixedPointTests, q15_16Constructor_positive_shouldSetTheRightValue)
 	EXPECT_EQ(ss.str(), "1.5");
 }
 
-TEST(FixedPointTests, q15_16Constructor_negative_shouldSetTheRightValue)
+TEST(FixedPointTests, fixedPointConstructor_negative_shouldSetTheRightValue)
 {
 	stringstream ss;
 	FixedPoint testee(-((2 << 16) + (1 << 15)));
@@ -164,6 +164,25 @@ TEST(FixedPointTests, operatorMultiplyAssignation)
 	EXPECT_EQ(testee4, 16.25);
 }
 
+TEST(FixedPointTests, operatorDivideAssignation)
+{
+	FixedPoint testee1(10.0);
+	testee1 /= 1.25;
+	EXPECT_EQ(testee1, 8.0);
+
+	FixedPoint testee2(-10.0);
+	testee2 /= 2.5;
+	EXPECT_EQ(testee2, -4.0);
+
+	FixedPoint testee3(10.0);
+	testee3 /= -5.0;
+	EXPECT_EQ(testee3, -2.0);
+
+	FixedPoint testee4(-10.0);
+	testee4 /= -8.0;
+	EXPECT_EQ(testee4, 1.25);
+}
+
 TEST(FixedPointTests, operatorIncrement)
 {
 	FixedPoint testee(10.0);
@@ -209,6 +228,14 @@ TEST(FixedPointTests, operatorMultiply)
 	EXPECT_EQ(FixedPoint(-10.0) * 1.75, -17.5);
 	EXPECT_EQ(FixedPoint(10.0) * -1.5, -15.0);
 	EXPECT_EQ(FixedPoint(-10.0) * -1.625, 16.25);
+}
+
+TEST(FixedPointTests, operatorDivide)
+{
+	EXPECT_EQ(FixedPoint(10.0) / 1.25, 8.0);
+	EXPECT_EQ(FixedPoint(-10.0) / 2.5, -4.0);
+	EXPECT_EQ(FixedPoint(10.0) / -5.0, -2.0);
+	EXPECT_EQ(FixedPoint(-10.0) / -8.0, 1.25);
 }
 
 TEST(FixedPointTests, operatorEqualTo)
