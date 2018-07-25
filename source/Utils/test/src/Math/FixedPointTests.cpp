@@ -164,6 +164,29 @@ TEST(FixedPointTests, operatorMultiplyAssignation)
 	EXPECT_EQ(testee4, 16.25);
 }
 
+TEST(FixedPointTests, operatorIncrement)
+{
+	FixedPoint testee(10.0);
+	EXPECT_EQ(++testee, 11.0);
+	EXPECT_EQ(testee++, 11.0);
+	EXPECT_EQ(testee, 12.0);
+}
+
+TEST(FixedPointTests, operatorDecrement)
+{
+	FixedPoint testee(10.0);
+	EXPECT_EQ(--testee, 9.0);
+	EXPECT_EQ(testee--, 9.0);
+	EXPECT_EQ(testee, 8.0);
+}
+
+TEST(FixedPointTests, operatorUnaryMinus)
+{
+	EXPECT_EQ(-FixedPoint(10.0), -10.0);
+	EXPECT_EQ(-FixedPoint(0.0), 0.0);
+	EXPECT_EQ(-FixedPoint(-10.0), 10.0);
+}
+
 TEST(FixedPointTests, operatorAdd)
 {
 	EXPECT_EQ(FixedPoint(10.0) + 1.25, 11.25);

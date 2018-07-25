@@ -12,7 +12,7 @@ namespace apb
 	class FixedPoint
 	{
 		static constexpr int32_t FractionSize = 16;
-		static constexpr int32_t FractionDenominator = 1 << FractionSize;
+		static constexpr int32_t Q15_16OneValue = 1 << FractionSize;
 
 		int32_t m_value;
 
@@ -27,9 +27,17 @@ namespace apb
 		FixedPoint& multiplyAccumulate(const FixedPoint& left, const FixedPoint& right);
 
 		FixedPoint& operator=(const FixedPoint& other);
+
 		FixedPoint& operator+=(const FixedPoint& other);
 		FixedPoint& operator-=(const FixedPoint& other);
 		FixedPoint& operator*=(const FixedPoint& other);
+
+		FixedPoint& operator++();
+		FixedPoint operator++(int dummy);
+		FixedPoint& operator--();
+		FixedPoint operator--(int dummy);
+
+		FixedPoint operator-();
 
 	private:
 		static int32_t multiplyFixedPoint(int32_t left, int32_t right);
@@ -39,6 +47,7 @@ namespace apb
 		friend FixedPoint operator+(const FixedPoint& left, const FixedPoint& right);
 		friend FixedPoint operator-(const FixedPoint& left, const FixedPoint& right);
 		friend FixedPoint operator*(const FixedPoint& left, const FixedPoint& right);
+
 
 		friend bool operator==(const FixedPoint& left, const FixedPoint& right);
 		friend bool operator!=(const FixedPoint& left, const FixedPoint& right);
@@ -61,14 +70,14 @@ namespace apb
 	inline FixedPoint::FixedPoint(float value)
 	{
 		int32_t integerPart = static_cast<int32_t>(value);
-		int32_t fractionalPart = static_cast<int32_t>((value - integerPart) * FractionDenominator);
+		int32_t fractionalPart = static_cast<int32_t>((value - integerPart) * Q15_16OneValue);
 		m_value = (integerPart << FractionSize) + fractionalPart;
 	}
 
 	inline FixedPoint::FixedPoint(double value)
 	{
 		int32_t integerPart = static_cast<int32_t>(value);
-		int32_t fractionalPart = static_cast<int32_t>((value - integerPart) * FractionDenominator);
+		int32_t fractionalPart = static_cast<int32_t>((value - integerPart) * Q15_16OneValue);
 		m_value = (integerPart << FractionSize) + fractionalPart;
 	}
 
@@ -104,6 +113,37 @@ namespace apb
 	{
 		m_value = multiplyFixedPoint(m_value, other.m_value);
 		return *this;
+	}
+
+	inline FixedPoint& FixedPoint::operator++()
+	{
+		m_value += Q15_16OneValue;
+		return *this;
+	}
+
+	inline FixedPoint FixedPoint::operator++(int dummy)
+	{
+		int32_t oldValue = m_value;
+		m_value += Q15_16OneValue;
+		return FixedPoint(oldValue);
+	}
+
+	inline FixedPoint& FixedPoint::operator--()
+	{
+		m_value -= Q15_16OneValue;
+		return *this;
+	}
+
+	inline FixedPoint FixedPoint::operator--(int dummy)
+	{
+		int32_t oldValue = m_value;
+		m_value -= Q15_16OneValue;
+		return FixedPoint(oldValue);
+	}
+
+	inline FixedPoint FixedPoint::operator-()
+	{
+		return FixedPoint(-m_value);
 	}
 
 	inline FixedPoint operator+(const FixedPoint& left, const FixedPoint& right)
@@ -156,7 +196,7 @@ namespace apb
 		int32_t signValue = FixedPoint::sign(fixedPoint.m_value);
 		int32_t absValue = FixedPoint::abs(fixedPoint.m_value);
 		double integerPart = absValue >> FixedPoint::FractionSize;
-		double fractionalPart = static_cast<double>(absValue & 0xFFFF) / FixedPoint::FractionDenominator;
+		double fractionalPart = static_cast<double>(absValue & 0xFFFF) / FixedPoint::Q15_16OneValue;
 		return stream << (integerPart + fractionalPart) * signValue;
 	}
 
