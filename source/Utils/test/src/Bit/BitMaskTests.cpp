@@ -1,4 +1,4 @@
-#include <Bit/BitMask.h>
+#include <Utils/Bit/BitMask.h>
 
 #include <gtest/gtest.h>
 

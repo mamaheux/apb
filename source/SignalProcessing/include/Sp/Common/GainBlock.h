@@ -1,7 +1,7 @@
 #ifndef GAIN_BLOCK_H
 #define GAIN_BLOCK_H
 
-#include <SignalProcessingBlock.h>
+#include <Sp/SignalProcessingBlock.h>
 
 namespace apb
 {

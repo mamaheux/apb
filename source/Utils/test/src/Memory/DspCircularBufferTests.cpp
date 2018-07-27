@@ -1,4 +1,4 @@
-#include <Memory/DspCircularBuffer.h>
+#include <Utils/Memory/DspCircularBuffer.h>
 
 #include <gtest/gtest.h>
 
