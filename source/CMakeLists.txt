@@ -30,7 +30,7 @@ function(assign_source_group)
     endforeach()
 endfunction(assign_source_group)
 
-add_subdirectory(3rdparty)
+add_subdirectory(3rdParty)
 add_subdirectory(Utils)
 
 set_target_properties(gmock PROPERTIES FOLDER 3rdParty)

@@ -14,6 +14,8 @@ file(GLOB_RECURSE
 add_library(Utils
 	STATIC
     ${source_files})
+
+set_property(TARGET Utils PROPERTY CXX_STANDARD 14)
 	
 assign_source_group(${source_files})
 

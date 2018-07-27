@@ -143,7 +143,7 @@ namespace apb
 	template<int32_t FractionSize>
 	inline FixedPoint<FractionSize>::FixedPoint(const FixedPoint<FractionSize>& other) : m_value(other.m_value)
 	{
-		static_assert(FractionSize < 32, "FractionSize must be < 32")
+		static_assert(FractionSize < 32, "FractionSize must be < 32");
 	}
 
 	template<int32_t FractionSize>

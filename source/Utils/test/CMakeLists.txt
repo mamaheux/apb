@@ -15,6 +15,8 @@ file(GLOB_RECURSE
 	 
 add_executable(UtilsTests
     ${source_files})
+
+set_property(TARGET UtilsTests PROPERTY CXX_STANDARD 14)
 	
 target_link_libraries(UtilsTests
     Utils

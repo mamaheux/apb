@@ -34,3 +34,8 @@
 # build directory
 build/
 source/build/
+source/cmake-build-debug/
+source/cmake-build-release/
+
+#IDE folders
+source/.idea/
