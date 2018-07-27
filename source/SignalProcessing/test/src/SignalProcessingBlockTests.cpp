@@ -10,7 +10,7 @@ using namespace std;
 class TestSignalProcessingBlock : public SignalProcessingBlock<int>
 {
 public:
-    TestSignalProcessingBlock(FixedHeapArray<DspCircularBuffer<int>*> &&inputs,
+    TestSignalProcessingBlock(FixedHeapArray<DspCircularBuffer<int>*>&& inputs,
         DspCircularBuffer<int>* output,
         size_t inputHistorySize,
         size_t inputCount) : SignalProcessingBlock(move(inputs), output, inputHistorySize, inputCount)
@@ -21,7 +21,7 @@ public:
     {
     }
 
-    void step() const override
+    void step() override
     {
     }
 };

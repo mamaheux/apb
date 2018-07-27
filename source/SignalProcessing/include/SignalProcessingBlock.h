@@ -33,7 +33,7 @@ namespace apb
         std::size_t getInputHistorySize() const;
         std::size_t getInputCount() const;
 
-        virtual void step() const = 0;
+        virtual void step() = 0;
     };
 
     template <class T>
