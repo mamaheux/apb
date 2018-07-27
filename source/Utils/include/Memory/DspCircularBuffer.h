@@ -22,8 +22,8 @@ namespace apb
 
     public:
         DspCircularBuffer();
-        DspCircularBuffer(const DspCircularBuffer<T>& other) = delete;
-        DspCircularBuffer(DspCircularBuffer<T>&& other);
+        DspCircularBuffer(const DspCircularBuffer& other) = delete;
+        DspCircularBuffer(DspCircularBuffer&& other);
         virtual ~DspCircularBuffer();
 
         void freeze();
@@ -38,8 +38,8 @@ namespace apb
         T& operator[](std::size_t i);
         const T& operator[](std::size_t i) const;
 
-        T&  operator=(const DspCircularBuffer<T>& other) = delete;
-        T&  operator=(DspCircularBuffer<T>&& other) = delete;
+        T&  operator=(const DspCircularBuffer& other) = delete;
+        T&  operator=(DspCircularBuffer&& other) = delete;
 
     private:
         std::size_t getBoundedIndex(std::size_t i) const;

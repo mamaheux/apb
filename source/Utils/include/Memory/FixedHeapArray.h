@@ -15,8 +15,8 @@ namespace apb
 
     public:
         FixedHeapArray(std::size_t size);
-        FixedHeapArray(const FixedHeapArray<T>& other);
-        FixedHeapArray(FixedHeapArray<T>&& other);
+        FixedHeapArray(const FixedHeapArray& other);
+        FixedHeapArray(FixedHeapArray&& other);
         virtual ~FixedHeapArray();
 
         std::size_t size() const;
@@ -24,8 +24,8 @@ namespace apb
         T& operator[](std::size_t i);
         const T& operator[](std::size_t i) const;
 
-        T&  operator=(const FixedHeapArray<T>& other);
-        T&  operator=(FixedHeapArray<T>&& other);
+        T&  operator=(const FixedHeapArray& other);
+        T&  operator=(FixedHeapArray&& other);
     };
 
     template <class T>

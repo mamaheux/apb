@@ -9,7 +9,7 @@ namespace apb
     class LoopUnrolling
     {
     public:
-        template<class Function>
+        template <class Function>
         static void unroll(Function function);
     };
 
