@@ -17,7 +17,7 @@ file(GLOB_RECURSE
 add_executable(SignalProcessingTests
     ${source_files})
 
-set_property(TARGET UtilsTests PROPERTY CXX_STANDARD 14)
+set_property(TARGET SignalProcessingTests PROPERTY CXX_STANDARD 14)
     
 target_link_libraries(SignalProcessingTests
     SignalProcessing

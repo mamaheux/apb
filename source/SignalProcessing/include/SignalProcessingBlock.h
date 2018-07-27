@@ -20,11 +20,11 @@ namespace apb
         std::size_t m_inputCount;
 
     protected:
-        FixedHeapArray<const DspCircularBuffer<T>*> m_inputs;
+        FixedHeapArray<DspCircularBuffer<T>*> m_inputs;
         DspCircularBuffer<T>* m_output;
 
     public:
-        SignalProcessingBlock(FixedHeapArray<const DspCircularBuffer<T>*>&& inputs,
+        SignalProcessingBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
             DspCircularBuffer<T>* output,
             std::size_t inputHistorySize,
             std::size_t inputCount);
@@ -37,7 +37,7 @@ namespace apb
     };
 
     template <class T>
-    inline SignalProcessingBlock<T>::SignalProcessingBlock(FixedHeapArray<const DspCircularBuffer<T>*>&& inputs,
+    inline SignalProcessingBlock<T>::SignalProcessingBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
         DspCircularBuffer<T>* output,
         std::size_t inputHistorySize,
         std::size_t inputCount) :
@@ -48,7 +48,7 @@ namespace apb
             throw std::runtime_error("The input size must be equals to m_inputCount");
         }
 
-        for (std::size_t = 0; i < m_inputs.size(); i++)
+        for (std::size_t i = 0; i < m_inputs.size(); i++)
         {
             m_inputs[i]->reserveHistorySize(m_inputHistorySize);
         }

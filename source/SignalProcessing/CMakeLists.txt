@@ -16,7 +16,7 @@ add_library(SignalProcessing
     STATIC
     ${source_files})
 
-set_property(TARGET Utils PROPERTY CXX_STANDARD 14)
+set_property(TARGET SignalProcessing PROPERTY CXX_STANDARD 14)
 
 target_link_libraries(SignalProcessing
     Utils)

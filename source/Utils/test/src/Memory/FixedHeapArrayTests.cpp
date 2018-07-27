@@ -26,6 +26,16 @@ TEST(FixedHeapArrayTests, sizeConstructor_2_shouldConstructAnArray)
     EXPECT_EQ(testee[1], 2);
 }
 
+TEST(FixedHeapArrayTests, initializeListConstructor_shouldConstructAnArray)
+{
+    FixedHeapArray<int> testee({1, 2, 3});
+
+    EXPECT_EQ(testee.size(), 3);
+    EXPECT_EQ(testee[0], 1);
+    EXPECT_EQ(testee[1], 2);
+    EXPECT_EQ(testee[2], 3);
+}
+
 TEST(FixedHeapArrayTests, copyConstructor_shouldCopy)
 {
     FixedHeapArray<int> testee(2);

@@ -3,7 +3,7 @@
 
 #include <cstddef>
 #include <stdexcept>
-#include <stdexcept>
+#include <initializer_list>
 
 namespace apb
 {
@@ -15,6 +15,7 @@ namespace apb
 
     public:
         FixedHeapArray(std::size_t size);
+        FixedHeapArray(std::initializer_list<T> elements);
         FixedHeapArray(const FixedHeapArray& other);
         FixedHeapArray(FixedHeapArray&& other);
         virtual ~FixedHeapArray();
@@ -34,6 +35,22 @@ namespace apb
         if (m_size >= 1)
         {
             m_buffer = new T[m_size];
+        }
+    }
+
+    template <class T>
+    inline FixedHeapArray<T>::FixedHeapArray(std::initializer_list<T> elements) : m_size(elements.size()), m_buffer(nullptr)
+    {
+        if (m_size >= 1)
+        {
+            m_buffer = new T[m_size];
+
+            int i = 0;
+            for (auto& element : elements)
+            {
+                m_buffer[i] = element;
+                i++;
+            }
         }
     }
 
