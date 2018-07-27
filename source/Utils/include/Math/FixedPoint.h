@@ -6,7 +6,7 @@
 
 namespace apb
 {
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     class FixedPoint
     {
         static constexpr int32_t One = 1 << FractionSize;
@@ -105,19 +105,19 @@ namespace apb
         }
     };
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::FixedPoint() : m_value(0)
     {
         static_assert(FractionSize < 32, "FractionSize must be < 32");
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::FixedPoint(int32_t fixedPointValue) : m_value(fixedPointValue)
     {
         static_assert(FractionSize < 32, "FractionSize must be < 32");
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::FixedPoint(float value)
     {
         static_assert(FractionSize < 32, "FractionSize must be < 32");
@@ -127,7 +127,7 @@ namespace apb
         m_value = (integerPart << FractionSize) + fractionalPart;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::FixedPoint(double value)
     {
         static_assert(FractionSize < 32, "FractionSize must be < 32");
@@ -137,67 +137,67 @@ namespace apb
         m_value = (integerPart << FractionSize) + fractionalPart;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::FixedPoint(const FixedPoint<FractionSize>& other) : m_value(other.m_value)
     {
         static_assert(FractionSize < 32, "FractionSize must be < 32");
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::~FixedPoint()
     {
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::multiplyAccumulate(const FixedPoint<FractionSize>& left, const FixedPoint<FractionSize>& right)
     {
         m_value += multiplyFixedPoint(left.m_value, right.m_value);
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator=(const FixedPoint<FractionSize>& other)
     {
         m_value = other.m_value;
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator+=(const FixedPoint<FractionSize>& other)
     {
         m_value += other.m_value;
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator-=(const FixedPoint<FractionSize>& other)
     {
         m_value -= other.m_value;
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator*=(const FixedPoint<FractionSize>& other)
     {
         m_value = multiplyFixedPoint(m_value, other.m_value);
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator/=(const FixedPoint<FractionSize>& other)
     {
         m_value = divideFixedPoint(m_value, other.m_value);
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator++()
     {
         m_value += One;
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize> FixedPoint<FractionSize>::operator++(int dummy)
     {
         int32_t oldValue = m_value;
@@ -205,14 +205,14 @@ namespace apb
         return FixedPoint<FractionSize>(oldValue);
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>& FixedPoint<FractionSize>::operator--()
     {
         m_value -= One;
         return *this;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize> FixedPoint<FractionSize>::operator--(int dummy)
     {
         int32_t oldValue = m_value;
@@ -220,13 +220,13 @@ namespace apb
         return FixedPoint<FractionSize>(oldValue);
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize> FixedPoint<FractionSize>::operator-()
     {
         return FixedPoint<FractionSize>(-m_value);
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::operator float() const
     {
         int32_t signValue = FixedPoint::sign(m_value);
@@ -236,7 +236,7 @@ namespace apb
         return (integerPart + fractionalPart) * signValue;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline FixedPoint<FractionSize>::operator double() const
     {
         int32_t signValue = FixedPoint::sign(m_value);
@@ -246,25 +246,25 @@ namespace apb
         return (integerPart + fractionalPart) * signValue;
     }    
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline int32_t FixedPoint<FractionSize>::multiplyFixedPoint(int32_t left, int32_t right)
     {
         return static_cast<int32_t>((static_cast<int64_t>(left) * static_cast<int64_t>(right)) >> FractionSize);
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline int32_t FixedPoint<FractionSize>::divideFixedPoint(int32_t left, int32_t right)
     {
         return static_cast<int32_t>((static_cast<int64_t>(left) << FractionSize) / static_cast<int64_t>(right));
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline int32_t FixedPoint<FractionSize>::sign(int32_t value)
     {
         return value < 0 ? -1 : 1;
     }
 
-    template<int32_t FractionSize>
+    template <int32_t FractionSize>
     inline int32_t FixedPoint<FractionSize>::abs(int32_t value)
     {
         return value < 0 ? -value : value;

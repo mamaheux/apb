@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include <sstream>
-
 using namespace apb;
 using namespace std;
 
@@ -52,9 +50,13 @@ TEST(DspCircularBufferTests, operatorBrackets)
 {
     DspCircularBuffer<int> testee;
     testee.reserveHistorySize(8);
+    EXPECT_EQ(testee.size(), 0);
+
     testee.resetHistorySize();
     testee.reserveHistorySize(4);
     testee.freeze();
+
+    EXPECT_EQ(testee.size(), 4);
 
     testee.store(1);
     testee.store(2);
@@ -89,4 +91,27 @@ TEST(DspCircularBufferTests, operatorBrackets)
     EXPECT_EQ(testee[9], 5);
     EXPECT_EQ(testee[10], 4);
     EXPECT_EQ(testee[11], 3);
+}
+
+TEST(DspCircularBufferTests, moveConstructor_shouldMove)
+{
+    DspCircularBuffer<int> testee;
+    testee.reserveHistorySize(4);
+    testee.freeze();
+
+    EXPECT_EQ(testee.size(), 4);
+
+    testee.store(1);
+    testee.store(2);
+    testee.store(3);
+    testee.store(4);
+
+    DspCircularBuffer<int> movedTestee(move(testee));
+
+    EXPECT_EQ(testee.size(), 0);
+
+    EXPECT_EQ(movedTestee[0], 4);
+    EXPECT_EQ(movedTestee[1], 3);
+    EXPECT_EQ(movedTestee[2], 2);
+    EXPECT_EQ(movedTestee[3], 1);
 }

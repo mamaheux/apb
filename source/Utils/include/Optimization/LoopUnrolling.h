@@ -1,11 +1,11 @@
 #ifndef LOOP_UNROLLING_H
 #define LOOP_UNROLLING_H
 
-#include <cstdint>
+#include <cstddef>
 
 namespace apb
 {
-    template<uint32_t N>
+    template <std::size_t N>
     class LoopUnrolling
     {
     public:
@@ -13,16 +13,16 @@ namespace apb
         static void unroll(Function function);
     };
 
-    template<uint32_t N>
-    template<class Function>
+    template <std::size_t N>
+    template <class Function>
     inline void LoopUnrolling<N>::unroll(Function function)
     {
         function();
         LoopUnrolling<N - 1>::unroll(function);
     }
 
-    template<>
-    template<class Function>
+    template <>
+    template <class Function>
     inline void LoopUnrolling<0>::unroll(Function function)
     {
     }

@@ -12,7 +12,7 @@ namespace apb
      * x[0] : last stored element
      * x[1] : second last stored element ...
      */
-    template<class T>
+    template <class T>
     class DspCircularBuffer
     {
         T* m_buffer;
@@ -22,7 +22,8 @@ namespace apb
 
     public:
         DspCircularBuffer();
-        DspCircularBuffer(const DspCircularBuffer& other) = delete;
+        DspCircularBuffer(const DspCircularBuffer<T>& other) = delete;
+        DspCircularBuffer(DspCircularBuffer<T>&& other);
         virtual ~DspCircularBuffer();
 
         void freeze();
@@ -30,23 +31,40 @@ namespace apb
         void resetHistorySize();
         void reserveHistorySize(std::size_t size);
 
+        std::size_t size() const;
+
         void store(const T& value);
 
         T& operator[](std::size_t i);
         const T& operator[](std::size_t i) const;
 
-        T&  operator=(const DspCircularBuffer& other) = delete;
+        T&  operator=(const DspCircularBuffer<T>& other) = delete;
+        T&  operator=(DspCircularBuffer<T>&& other) = delete;
 
     private:
         std::size_t getBoundedIndex(std::size_t i) const;
     };
 
-    template<class T>
-    inline DspCircularBuffer<T>::DspCircularBuffer() : m_buffer(nullptr), m_size(0)
+    template <class T>
+    inline DspCircularBuffer<T>::DspCircularBuffer() : m_buffer(nullptr), m_size(0), m_size2x(0), m_actualIndex(0)
     {
     }
 
-    template<class T>
+    template <class T>
+    inline DspCircularBuffer<T>::DspCircularBuffer(DspCircularBuffer<T>&& other)
+    {
+        m_buffer = other.m_buffer;
+        m_size = other.m_size;
+        m_size2x = other.m_size2x;
+        m_actualIndex = other.m_actualIndex;
+
+        other.m_buffer = nullptr;
+        other.m_size = 0;
+        other.m_size2x = 0;
+        other.m_actualIndex = 0;
+    }
+
+    template <class T>
     inline DspCircularBuffer<T>::~DspCircularBuffer()
     {
         if (m_buffer != nullptr)
@@ -55,7 +73,7 @@ namespace apb
         }        
     }
 
-    template<class T>
+    template <class T>
     inline void DspCircularBuffer<T>::freeze()
     {
         if (m_buffer != nullptr)
@@ -70,7 +88,7 @@ namespace apb
         m_actualIndex = m_size;
     }
 
-    template<class T>
+    template <class T>
     inline void DspCircularBuffer<T>::unfreeze()
     {
         if (m_buffer == nullptr)
@@ -80,7 +98,7 @@ namespace apb
         delete[] m_buffer;
     }
 
-    template<class T>
+    template <class T>
     inline void DspCircularBuffer<T>::resetHistorySize()
     {
         if (m_buffer != nullptr)
@@ -92,7 +110,7 @@ namespace apb
         m_actualIndex = 0;
     }
 
-    template<class T>
+    template <class T>
     inline void DspCircularBuffer<T>::reserveHistorySize(std::size_t size)
     {
         if (m_buffer != nullptr)
@@ -107,7 +125,17 @@ namespace apb
         }        
     }
 
-    template<class T>
+    template <class T>
+    inline std::size_t DspCircularBuffer<T>::size() const
+    {
+        if (m_buffer == nullptr)
+        {
+            return 0;
+        }
+        return m_size;
+    }
+
+    template <class T>
     inline void DspCircularBuffer<T>::store(const T& value)
     {
         if (m_actualIndex == 0)
@@ -119,19 +147,19 @@ namespace apb
         m_buffer[m_actualIndex] = value;
     }
 
-    template<class T>
+    template <class T>
     inline T& DspCircularBuffer<T>::operator[](std::size_t i)
     {
         return m_buffer[getBoundedIndex(m_actualIndex + i)];
     }
 
-    template<class T>
+    template <class T>
     inline const T& DspCircularBuffer<T>::operator[](std::size_t i) const
     {
         return m_buffer[getBoundedIndex(m_actualIndex + i)];
     }
 
-    template<class T>
+    template <class T>
     std::size_t DspCircularBuffer<T>::getBoundedIndex(std::size_t i) const
     {
         if (i < m_size)
