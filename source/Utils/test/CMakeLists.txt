@@ -12,14 +12,14 @@ file(GLOB_RECURSE
     source_files
     src/*
     include/*)
-	 
+     
 add_executable(UtilsTests
     ${source_files})
 
 set_property(TARGET UtilsTests PROPERTY CXX_STANDARD 14)
-	
+    
 target_link_libraries(UtilsTests
     Utils
-	gtest)
-	
+    gtest)
+    
 assign_source_group(${source_files})
