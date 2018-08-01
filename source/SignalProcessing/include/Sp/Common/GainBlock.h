@@ -23,7 +23,7 @@ namespace apb
     };
 
     template <class T>
-    GainBlock<T>::GainBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
+    inline GainBlock<T>::GainBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
         DspCircularBuffer<T>* output, T gain) :
         SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, InputCount),
         m_gain(gain)
@@ -31,24 +31,24 @@ namespace apb
     }
 
     template <class T>
-    GainBlock<T>::~GainBlock()
+    inline GainBlock<T>::~GainBlock()
     {
     }
 
     template <class T>
-    T GainBlock<T>::getGain() const
+    inline T GainBlock<T>::getGain() const
     {
         return m_gain;
     }
 
     template <class T>
-    void GainBlock<T>::setGain(T gain)
+    inline void GainBlock<T>::setGain(T gain)
     {
         m_gain = gain;
     }
 
     template <class T>
-    void GainBlock<T>::step()
+    inline void GainBlock<T>::step()
     {
         this->m_output->store(m_gain * (*this->m_inputs[0])[0]);
     }

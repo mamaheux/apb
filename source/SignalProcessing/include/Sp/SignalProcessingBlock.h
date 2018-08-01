@@ -60,13 +60,13 @@ namespace apb
     }
 
     template <class T>
-    std::size_t SignalProcessingBlock<T>::getInputHistorySize() const
+    inline std::size_t SignalProcessingBlock<T>::getInputHistorySize() const
     {
         return m_inputHistorySize;
     }
 
     template <class T>
-    std::size_t SignalProcessingBlock<T>::getInputCount() const
+    inline std::size_t SignalProcessingBlock<T>::getInputCount() const
     {
         return m_inputCount;
     }

@@ -14,6 +14,7 @@ namespace apb
         std::size_t m_size;
 
     public:
+        FixedHeapArray();
         FixedHeapArray(std::size_t size);
         FixedHeapArray(std::initializer_list<T> elements);
         FixedHeapArray(const FixedHeapArray& other);
@@ -28,6 +29,11 @@ namespace apb
         T&  operator=(const FixedHeapArray& other);
         T&  operator=(FixedHeapArray&& other);
     };
+
+    template <class T>
+    inline FixedHeapArray<T>::FixedHeapArray() : m_size(0), m_buffer(nullptr)
+    {
+    }
 
     template <class T>
     inline FixedHeapArray<T>::FixedHeapArray(std::size_t size) : m_size(size), m_buffer(nullptr)

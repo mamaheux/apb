@@ -18,19 +18,19 @@ namespace apb
     };
 
     template <class T>
-    AddBlock<T>::AddBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
+    inline AddBlock<T>::AddBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
                             DspCircularBuffer<T>* output, std::size_t inputCount) :
             SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, inputCount)
     {
     }
 
     template <class T>
-    AddBlock<T>::~AddBlock()
+    inline AddBlock<T>::~AddBlock()
     {
     }
 
     template <class T>
-    void AddBlock<T>::step()
+    inline void AddBlock<T>::step()
     {
         T value(0);
         for (size_t i = 0; i < this->getInputCount(); i++)

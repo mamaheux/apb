@@ -69,7 +69,7 @@ namespace apb
     {
         if (m_buffer != nullptr)
         {
-            delete m_buffer;
+            delete[] m_buffer;
         }        
     }
 
