@@ -106,6 +106,25 @@ TEST(FixedPointTests, Q3_4_multiplyAccumulate)
     EXPECT_EQ(testee4, 0.5);
 }
 
+TEST(FixedPointTests, Q3_4_multiplySubtract)
+{
+    FixedPointQ3_4 testee1(1.0);
+    testee1.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee1, 0.0);
+
+    FixedPointQ3_4 testee2(-1.0);
+    testee2.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee2, -2.0);
+
+    FixedPointQ3_4 testee3(1.0);
+    testee3.multiplySubtract(-0.5, 2.0);
+    EXPECT_EQ(testee3, 2.0);
+
+    FixedPointQ3_4 testee4(1.0);
+    testee4.multiplySubtract(0.5, -1.0);
+    EXPECT_EQ(testee4, 1.5);
+}
+
 TEST(FixedPointTests, Q3_4_operatorAddAssignation)
 {
     FixedPointQ3_4 testee1(1.0);
@@ -374,6 +393,25 @@ TEST(FixedPointTests, Q7_8_multiplyAccumulate)
     EXPECT_EQ(testee4, 5.0);
 }
 
+TEST(FixedPointTests, Q7_8_multiplySubtract)
+{
+    FixedPointQ7_8 testee1(1.0);
+    testee1.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee1, 0.0);
+
+    FixedPointQ7_8 testee2(-1.0);
+    testee2.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee2, -2.0);
+
+    FixedPointQ7_8 testee3(1.0);
+    testee3.multiplySubtract(-0.5, 2.0);
+    EXPECT_EQ(testee3, 2.0);
+
+    FixedPointQ7_8 testee4(1.0);
+    testee4.multiplySubtract(0.5, -1.0);
+    EXPECT_EQ(testee4, 1.5);
+}
+
 TEST(FixedPointTests, Q7_8_operatorAddAssignation)
 {
     FixedPointQ7_8 testee1(10.0);
@@ -640,6 +678,27 @@ TEST(FixedPointTests, Q15_16_multiplyAccumulate)
     FixedPointQ15_16 testee4(10.0);
     testee4.multiplyAccumulate(0.5, -10.0);
     EXPECT_EQ(testee4, 5.0);
+}
+
+
+
+TEST(FixedPointTests, Q15_16_multiplySubtract)
+{
+    FixedPointQ15_16 testee1(1.0);
+    testee1.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee1, 0.0);
+
+    FixedPointQ15_16 testee2(-1.0);
+    testee2.multiplySubtract(0.5, 2.0);
+    EXPECT_EQ(testee2, -2.0);
+
+    FixedPointQ15_16 testee3(1.0);
+    testee3.multiplySubtract(-0.5, 2.0);
+    EXPECT_EQ(testee3, 2.0);
+
+    FixedPointQ15_16 testee4(1.0);
+    testee4.multiplySubtract(0.5, -1.0);
+    EXPECT_EQ(testee4, 1.5);
 }
 
 TEST(FixedPointTests, Q15_16_operatorAddAssignation)

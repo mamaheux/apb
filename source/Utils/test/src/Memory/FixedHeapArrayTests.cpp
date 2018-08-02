@@ -136,3 +136,42 @@ TEST(FixedHeapArrayTests, moveAssignationOperator_notEmpty_shouldMove)
     EXPECT_EQ(movedTestee[0], 1);
     EXPECT_EQ(movedTestee[1], 2);
 }
+
+
+TEST(FixedHeapArrayTests, equalOperator_shouldReturnTrueIfEqual)
+{
+    FixedHeapArray<int> testee1(2);
+    testee1[0] = 1;
+    testee1[1] = 2;
+
+    FixedHeapArray<int> testee2(2);
+    testee2[0] = 1;
+    testee2[1] = 2;
+
+    FixedHeapArray<int> testee3(3);
+
+    EXPECT_FALSE(testee1 == testee3);
+
+    EXPECT_TRUE(testee1 == testee2);
+    testee1[1] = 1;
+    EXPECT_FALSE(testee1 == testee2);
+}
+
+TEST(FixedHeapArrayTests, notEqualOperator_shouldReturnTrueIfEqual)
+{
+    FixedHeapArray<int> testee1(2);
+    testee1[0] = 1;
+    testee1[1] = 2;
+
+    FixedHeapArray<int> testee2(2);
+    testee2[0] = 1;
+    testee2[1] = 2;
+
+    FixedHeapArray<int> testee3(3);
+
+    EXPECT_TRUE(testee1 != testee3);
+
+    EXPECT_FALSE(testee1 != testee2);
+    testee1[1] = 1;
+    EXPECT_TRUE(testee1 != testee2);
+}

@@ -37,6 +37,7 @@ namespace apb
         virtual ~FixedPoint();
 
         FixedPoint& multiplyAccumulate(const FixedPoint& left, const FixedPoint& right);
+        FixedPoint& multiplySubtract(const FixedPoint& left, const FixedPoint& right);
 
         FixedPoint& operator=(const FixedPoint& other);
 
@@ -168,6 +169,14 @@ namespace apb
                                                                                                             const FixedPoint<IntegerSize, FractionSize>& right)
     {
         m_value += multiplyFixedPoint(left.m_value, right.m_value);
+        return *this;
+    }
+
+    template <std::size_t IntegerSize, std::size_t FractionSize>
+    inline FixedPoint<IntegerSize, FractionSize>& FixedPoint<IntegerSize, FractionSize>::multiplySubtract(const FixedPoint<IntegerSize, FractionSize>& left,
+                                                                                                            const FixedPoint<IntegerSize, FractionSize>& right)
+    {
+        m_value -= multiplyFixedPoint(left.m_value, right.m_value);
         return *this;
     }
 

@@ -141,6 +141,30 @@ namespace apb
         other.m_size = 0;
         other.m_buffer = nullptr;
     }
+
+    template <class T>
+    inline bool operator==(const FixedHeapArray<T>& left, const FixedHeapArray<T>& right)
+    {
+        if (left.size() != right.size())
+        {
+            return false;
+        }
+
+        for (int i = 0; i < left.size(); i++)
+        {
+            if (left[i] != right[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    template <class T>
+    inline bool operator!=(const FixedHeapArray<T>& left, const FixedHeapArray<T>& right)
+    {
+        return !(left == right);
+    }
 }
 
 #endif
