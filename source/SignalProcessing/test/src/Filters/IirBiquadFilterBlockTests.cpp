@@ -4,8 +4,6 @@
 
 #include <utility>
 #include <cmath>
-#include <chrono>
-#include <iostream>
 
 using namespace apb;
 using namespace std;
@@ -148,20 +146,6 @@ TEST(IirBiquadFilterBlockTests, iirBiquadFilterBlock_shouldFilter)
         input.store(nextInputValue);
         block.step();
     }
-
-    cout << "input = [";
-    for (size_t i = 0; i < SignalLength; i++)
-    {
-        cout << input[SignalLength - i] << ", ";
-    }
-    cout << "]" << endl;
-
-    cout << "output = [";
-    for (size_t i = 0; i < SignalLength; i++)
-    {
-        cout << output[SignalLength - i] << ", ";
-    }
-    cout << "]" << endl;
 
     ASSERT_EQ(expectedOutput.size(), SignalLength);
     for (size_t i = 0; i < SignalLength; i++)
