@@ -26,6 +26,7 @@ namespace apb
 
         FixedArray<T, 3>* m_currentBCoefficients;
         FixedArray<T, 3> m_bCoefficients[2];
+
     public:
         IirBiquadFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
             DspCircularBuffer<T>* output,

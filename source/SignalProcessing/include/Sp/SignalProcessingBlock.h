@@ -43,9 +43,13 @@ namespace apb
         std::size_t inputCount) :
         m_inputs(inputs), m_output(output), m_inputHistorySize(inputHistorySize), m_inputCount(inputCount)
     {
+        if (m_inputCount <= 0)
+        {
+            throw std::runtime_error("The input size must be greater than 0.");
+        }
         if (inputs.size() != m_inputCount)
         {
-            throw std::runtime_error("The input size must be equals to m_inputCount");
+            throw std::runtime_error("The input size must be equals to m_inputCount.");
         }
 
         for (std::size_t i = 0; i < m_inputs.size(); i++)

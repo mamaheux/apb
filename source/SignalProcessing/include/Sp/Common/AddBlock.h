@@ -11,7 +11,7 @@ namespace apb
         static constexpr std::size_t InputHisorySize = 1;
 
     public:
-        AddBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs, DspCircularBuffer<T>* output, std::size_t inputCount);
+        AddBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs, DspCircularBuffer<T>* output);
         ~AddBlock() override;
 
         void step() override;
@@ -19,8 +19,8 @@ namespace apb
 
     template <class T>
     inline AddBlock<T>::AddBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-                            DspCircularBuffer<T>* output, std::size_t inputCount) :
-            SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, inputCount)
+                            DspCircularBuffer<T>* output) :
+            SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, inputs.size())
     {
     }
 

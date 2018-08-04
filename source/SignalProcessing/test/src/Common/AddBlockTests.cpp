@@ -7,7 +7,7 @@
 using namespace apb;
 using namespace std;
 
-TEST(AddBlockTests, step_shouldStoreGainedValues)
+TEST(AddBlockTests, step_shouldStoreAddedValues)
 {
     DspCircularBuffer<int> input1;
     DspCircularBuffer<int> input2;
@@ -15,7 +15,7 @@ TEST(AddBlockTests, step_shouldStoreGainedValues)
     output.reserveHistorySize(1);
 
     FixedHeapArray<DspCircularBuffer<int>*> inputs({&input1, &input2});
-    AddBlock<int> block(move(inputs), &output, 2);
+    AddBlock<int> block(move(inputs), &output);
 
     input1.freeze();
     input2.freeze();

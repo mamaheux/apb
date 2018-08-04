@@ -23,11 +23,11 @@ namespace apb
 
         std::size_t size() const;
 
-        ArrayIterator<T> begin();
-        ArrayIterator<T> end();
+        ArrayIterator<T> begin() noexcept;
+        ArrayIterator<T> end() noexcept;
 
-        ArrayIterator<const T> cbegin() const;
-        ArrayIterator<const T> cend() const;
+        ArrayIterator<const T> cbegin() const noexcept;
+        ArrayIterator<const T> cend() const noexcept;
 
         T& operator[](std::size_t i);
         const T& operator[](std::size_t i) const;
@@ -87,25 +87,25 @@ namespace apb
     }
 
     template <class T, std::size_t N>
-    inline ArrayIterator<T> FixedArray<T, N>::begin()
+    inline ArrayIterator<T> FixedArray<T, N>::begin() noexcept
     {
         return ArrayIterator<T>(m_buffer, N);
     }
 
     template <class T, std::size_t N>
-    inline ArrayIterator<T> FixedArray<T, N>::end()
+    inline ArrayIterator<T> FixedArray<T, N>::end() noexcept
     {
         return ArrayIterator<T>(m_buffer, N, N);
     }
 
     template <class T, std::size_t N>
-    inline ArrayIterator<const T> FixedArray<T, N>::cbegin() const
+    inline ArrayIterator<const T> FixedArray<T, N>::cbegin() const noexcept
     {
         return ArrayIterator<const T>(m_buffer, N);
     }
 
     template <class T, std::size_t N>
-    inline ArrayIterator<const T> FixedArray<T, N>::cend() const
+    inline ArrayIterator<const T> FixedArray<T, N>::cend() const noexcept
     {
         return ArrayIterator<const T>(m_buffer, N, N);
     };
