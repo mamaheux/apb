@@ -1,6 +1,8 @@
 #ifndef FIXED_HEAP_ARRAY_H
 #define FIXED_HEAP_ARRAY_H
 
+#include <Utils/Memory/ArrayIterator.h>
+
 #include <cstddef>
 #include <stdexcept>
 #include <initializer_list>
@@ -22,6 +24,12 @@ namespace apb
         virtual ~FixedHeapArray();
 
         std::size_t size() const;
+
+        ArrayIterator<T> begin();
+        ArrayIterator<T> end();
+
+        ArrayIterator<const T> cbegin() const;
+        ArrayIterator<const T> cend() const;
 
         T& operator[](std::size_t i);
         const T& operator[](std::size_t i) const;
@@ -95,6 +103,30 @@ namespace apb
     {
         return m_size;
     }
+
+    template <class T>
+    inline ArrayIterator<T> FixedHeapArray<T>::begin()
+    {
+        return ArrayIterator<T>(m_buffer, m_size);
+    }
+
+    template <class T>
+    inline ArrayIterator<T> FixedHeapArray<T>::end()
+    {
+        return ArrayIterator<T>(m_buffer, m_size, m_size);
+    }
+
+    template <class T>
+    inline ArrayIterator<const T> FixedHeapArray<T>::cbegin() const
+    {
+        return ArrayIterator<const T>(m_buffer, m_size);
+    }
+
+    template <class T>
+    inline ArrayIterator<const T> FixedHeapArray<T>::cend() const
+    {
+        return ArrayIterator<const T>(m_buffer, m_size, m_size);
+    };
 
     template <class T>
     inline T& FixedHeapArray<T>::operator[](std::size_t i)

@@ -62,7 +62,7 @@ namespace apb
         static T sign(T value);
         static T abs(T value);
 
-        
+    public:
         friend inline FixedPoint operator+(const FixedPoint& left, const FixedPoint& right)
         {
             return FixedPoint(static_cast<T>(left.m_value + right.m_value));

@@ -67,6 +67,27 @@ TEST(FixedArrayTests, moveConstructor_shouldMove)
     EXPECT_EQ(movedTestee[1], 2);
 }
 
+TEST(FixedArrayTests, iterator_shouldIterate)
+{
+    FixedArray<int, 2> testee;
+    testee[0] = 1;
+    testee[1] = 2;
+
+    int i = 1;
+    for(auto it = testee.begin(); it != testee.end(); ++it)
+    {
+        EXPECT_EQ(*it, i);
+        i++;
+    }
+
+    i = 1;
+    for(auto it = testee.cbegin(); it != testee.cend(); ++it)
+    {
+        EXPECT_EQ(*it, i);
+        i++;
+    }
+}
+
 TEST(FixedArrayTests, assignationOperator_shouldCopy)
 {
     FixedArray<int, 2> testee;

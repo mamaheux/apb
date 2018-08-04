@@ -72,7 +72,7 @@ TEST(IirBiquadFilterBlockTests, step_FixedPoint_shouldStoreFilterResult)
     EXPECT_EQ(output[0], -6.0);
 }
 
-TEST(IirBiquadFilterBlockTests, getCoefficient_shouldReturnCurrentCoefficients)
+TEST(IirBiquadFilterBlockTests, getCoefficients_shouldReturnCurrentCoefficients)
 {
     DspCircularBuffer<FixedPointQ15_16> input;
     DspCircularBuffer<FixedPointQ15_16> output;

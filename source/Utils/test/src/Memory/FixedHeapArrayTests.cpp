@@ -137,6 +137,34 @@ TEST(FixedHeapArrayTests, moveAssignationOperator_notEmpty_shouldMove)
     EXPECT_EQ(movedTestee[1], 2);
 }
 
+TEST(FixedHeapArrayTests, iterator_shouldIterate)
+{
+    FixedHeapArray<int> empty(0);
+    FixedHeapArray<int> testee(2);
+    testee[0] = 1;
+    testee[1] = 2;
+
+    int i = 1;
+    for(auto it = empty.begin(); it != empty.end(); ++it)
+    {
+        i++;
+    }
+    EXPECT_EQ(i, 1);
+
+    i = 1;
+    for(auto it = testee.begin(); it != testee.end(); ++it)
+    {
+        EXPECT_EQ(*it, i);
+        i++;
+    }
+
+    i = 1;
+    for(auto it = testee.cbegin(); it != testee.cend(); ++it)
+    {
+        EXPECT_EQ(*it, i);
+        i++;
+    }
+}
 
 TEST(FixedHeapArrayTests, equalOperator_shouldReturnTrueIfEqual)
 {
