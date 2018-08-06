@@ -1,4 +1,4 @@
-#include <Sp/Common/SelectorBlock.h>
+#include <Sp/Blocks/Common/SelectorBlock.h>
 
 #include <gtest/gtest.h>
 

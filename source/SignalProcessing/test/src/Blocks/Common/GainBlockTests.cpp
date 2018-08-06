@@ -1,4 +1,4 @@
-#include <Sp/Common/GainBlock.h>
+#include <Sp/Blocks/Common/GainBlock.h>
 
 #include <gtest/gtest.h>
 

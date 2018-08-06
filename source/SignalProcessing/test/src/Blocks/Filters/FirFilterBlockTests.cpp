@@ -1,4 +1,4 @@
-#include <Sp/Filters/FirFilterBlock.h>
+#include <Sp/Blocks/Filters/FirFilterBlock.h>
 
 #include <gtest/gtest.h>
 

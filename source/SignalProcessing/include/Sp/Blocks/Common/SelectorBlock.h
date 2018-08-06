@@ -1,7 +1,7 @@
 #ifndef SELECTOR_BLOCK_H
 #define SELECTOR_BLOCK_H
 
-#include <Sp/SignalProcessingBlock.h>
+#include <Sp/Blocks/SignalProcessingBlock.h>
 
 namespace apb
 {

@@ -1,7 +1,7 @@
 #ifndef ADD_BLOCK_H
 #define ADD_BLOCK_H
 
-#include <Sp/SignalProcessingBlock.h>
+#include <Sp/Blocks/SignalProcessingBlock.h>
 
 namespace apb
 {

@@ -1,4 +1,4 @@
-#include <Sp/Filters/IirFilterBlock.h>
+#include <Sp/Blocks/Filters/IirFilterBlock.h>
 
 #include <gtest/gtest.h>
 

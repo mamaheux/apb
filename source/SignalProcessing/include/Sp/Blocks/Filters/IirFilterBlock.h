@@ -1,7 +1,7 @@
 #ifndef IIR_FILTER_BLOCK_H
 #define IIR_FILTER_BLOCK_H
 
-#include <Sp/Filters/IirBiquadFilterBlock.h>
+#include <Sp/Blocks/Filters/IirBiquadFilterBlock.h>
 #include <Utils/Optimization/LoopUnrolling.h>
 #include <Utils/Math/FixedPoint.h>
 #include <Utils/Math/Helpers.h>

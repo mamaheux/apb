@@ -1,4 +1,4 @@
-#include <Sp/Filters/IirBiquadFilterBlock.h>
+#include <Sp/Blocks/Filters/IirBiquadFilterBlock.h>
 
 #include <gtest/gtest.h>
 

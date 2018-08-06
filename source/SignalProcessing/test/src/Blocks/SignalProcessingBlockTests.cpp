@@ -1,4 +1,4 @@
-#include <Sp/SignalProcessingBlock.h>
+#include <Sp/Blocks/SignalProcessingBlock.h>
 
 #include <gtest/gtest.h>
 

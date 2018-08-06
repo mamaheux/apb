@@ -1,7 +1,7 @@
 #ifndef FIR_FILTER_BLOCK_H
 #define FIR_FILTER_BLOCK_H
 
-#include <Sp/SignalProcessingBlock.h>
+#include <Sp/Blocks/SignalProcessingBlock.h>
 #include <Utils/Optimization/LoopUnrolling.h>
 #include <Utils/Math/FixedPoint.h>
 #include <Utils/Math/Helpers.h>

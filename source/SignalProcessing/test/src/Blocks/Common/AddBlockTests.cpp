@@ -1,4 +1,4 @@
-#include <Sp/Common/AddBlock.h>
+#include <Sp/Blocks/Common/AddBlock.h>
 
 #include <gtest/gtest.h>
 
