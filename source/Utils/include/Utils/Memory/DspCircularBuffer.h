@@ -84,7 +84,7 @@ namespace apb
         {
             throw std::runtime_error("The buffer size must be greater than 0.");
         }
-        m_buffer = new T[m_size];
+        m_buffer = new T[m_size]();
         m_actualIndex = m_size;
     }
 

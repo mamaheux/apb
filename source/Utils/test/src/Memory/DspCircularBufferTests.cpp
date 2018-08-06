@@ -1,9 +1,27 @@
 #include <Utils/Memory/DspCircularBuffer.h>
+#include <Utils/Math/FixedPoint.h>
+
 
 #include <gtest/gtest.h>
 
 using namespace apb;
 using namespace std;
+
+#define TEST_FREEZE_SHOULD_INITIALIZE_THE_BUFFER_TO_0(type) \
+    TEST(DspCircularBufferTests, freeze_##type##_shouldInitializeTheBufferTo0) \
+    { \
+        DspCircularBuffer<type> testee; \
+        testee.reserveHistorySize(2); \
+        testee.freeze();\
+\
+        EXPECT_EQ(testee[0], 0); \
+        EXPECT_EQ(testee[1], 0); \
+    }
+
+TEST_FREEZE_SHOULD_INITIALIZE_THE_BUFFER_TO_0(double)
+TEST_FREEZE_SHOULD_INITIALIZE_THE_BUFFER_TO_0(float)
+TEST_FREEZE_SHOULD_INITIALIZE_THE_BUFFER_TO_0(int)
+TEST_FREEZE_SHOULD_INITIALIZE_THE_BUFFER_TO_0(FixedPointQ15_16)
 
 TEST(DspCircularBufferTests, freeze_twoTimes_shouldThrowAnException)
 {
