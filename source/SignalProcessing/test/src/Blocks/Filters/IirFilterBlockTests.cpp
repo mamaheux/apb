@@ -1,5 +1,7 @@
 #include <Sp/Blocks/Filters/IirFilterBlock.h>
 
+#include <Helpers/TextWaveFile.h>
+
 #include <gtest/gtest.h>
 
 #include <utility>
@@ -193,23 +195,35 @@ TEST(IirFilterBlockTests, iirFilterBlock_shouldFilter)
         block.step();
     }
 
-    cout << "input = [";
-    for (size_t i = 0; i < SignalLength; i++)
-    {
-        cout << input[SignalLength - i] << ", ";
-    }
-    cout << "]" << endl;
-
-    cout << "output = [";
-    for (size_t i = 0; i < SignalLength; i++)
-    {
-        cout << output[SignalLength - i] << ", ";
-    }
-    cout << "]" << endl;
-
     ASSERT_EQ(expectedOutput.size(), SignalLength);
     for (size_t i = 0; i < SignalLength; i++)
     {
         EXPECT_LT(abs(static_cast<double>(output[SignalLength - i] - expectedOutput[i])), 0.001);
+    }
+}
+
+TEST(IirFilterBlockTests, iirFilterBlock_waveFile_shouldFilter)
+{
+    InputTextWaveFile inputFile("resources/acoustic.twav");
+    InputTextWaveFile expectedFile("resources/IirFilterBlockTests/iirFilterBlock_waveFile_shouldFilter.twav");
+
+    DspCircularBuffer<FixedPointQ15_16> input;
+    DspCircularBuffer<FixedPointQ15_16> output;
+    output.reserveHistorySize(1);
+
+    FixedHeapArray<FixedArray<FixedPointQ15_16, 2>> aCoefficients({{-1.79909640948, 0.817512403385}});
+    FixedHeapArray<FixedArray<FixedPointQ15_16, 3>> bCoefficients({{0.00460399847502, 0.00920799695004, 0.00460399847502}});
+
+    FixedHeapArray<DspCircularBuffer<FixedPointQ15_16>*> inputs({&input});
+    IirFilterBlock<FixedPointQ15_16> block(move(inputs), &output, aCoefficients, bCoefficients);
+
+    input.freeze();
+    output.freeze();
+
+    while (!inputFile.isEndOfFile())
+    {
+        input.store(inputFile.readSample());
+        block.step();
+        EXPECT_LT(abs(static_cast<double>(output[0]) - expectedFile.readSample()), 0.01);
     }
 }

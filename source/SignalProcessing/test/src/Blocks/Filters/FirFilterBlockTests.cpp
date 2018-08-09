@@ -1,5 +1,7 @@
 #include <Sp/Blocks/Filters/FirFilterBlock.h>
 
+#include <Helpers/TextWaveFile.h>
+
 #include <gtest/gtest.h>
 
 #include <utility>
@@ -145,6 +147,37 @@ TEST(FirFilterBlockTests, firFilterBlock_shouldFilter)
     for (size_t i = 0; i < SignalLength; i++)
     {
         EXPECT_LT(abs(static_cast<double>(output[SignalLength - i] - expectedOutput[i])), 0.001);
+    }
+}
+
+TEST(FirFilterBlockTests, firFilterBlock_waveFile_shouldFilter)
+{
+    InputTextWaveFile inputFile("resources/acoustic.twav");
+    InputTextWaveFile expectedFile("resources/FirFilterBlockTests/firFilterBlock_waveFile_shouldFilter.twav");
+
+    DspCircularBuffer<FixedPointQ15_16> input;
+    DspCircularBuffer<FixedPointQ15_16> output;
+    output.reserveHistorySize(1);
+
+    FixedHeapArray<FixedPointQ15_16> coefficients(
+    {
+        0.0402780715679f, 0.0431709269019f, 0.04583856348f, 0.0482488588081f, 0.0503725809484f, 0.0521838186068f,
+        0.0536603637361f, 0.0547840404227f, 0.055540974694f, 0.055921800834f, 0.055921800834f, 0.055540974694f,
+        0.0547840404227f, 0.0536603637361f, 0.0521838186068f, 0.0503725809484f, 0.0482488588081f, 0.04583856348f,
+        0.0431709269019f, 0.0402780715679f
+    });
+
+    FixedHeapArray<DspCircularBuffer<FixedPointQ15_16>*> inputs({&input});
+    FirFilterBlock<FixedPointQ15_16, 1> block(move(inputs), &output, coefficients);
+
+    input.freeze();
+    output.freeze();
+
+    while (!inputFile.isEndOfFile())
+    {
+        input.store(inputFile.readSample());
+        block.step();
+        EXPECT_LT(abs(static_cast<double>(output[0]) - expectedFile.readSample()), 0.01);
     }
 }
 

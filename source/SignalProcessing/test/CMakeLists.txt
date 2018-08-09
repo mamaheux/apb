@@ -25,3 +25,7 @@ target_link_libraries(SignalProcessingTests
     gtest)
     
 assign_source_group(${source_files})
+
+add_custom_command(TARGET SignalProcessingTests POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/resources $<TARGET_FILE_DIR:SignalProcessingTests>/resources)
