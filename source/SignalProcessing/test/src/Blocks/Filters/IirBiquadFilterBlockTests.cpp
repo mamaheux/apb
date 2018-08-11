@@ -103,7 +103,6 @@ TEST(IirBiquadFilterBlockTests, getCoefficients_shouldReturnCurrentCoefficients)
     EXPECT_EQ(block.getBCoefficients(), bCoefficients3);
 }
 
-
 TEST(IirBiquadFilterBlockTests, iirBiquadFilterBlock_shouldFilter)
 {
     constexpr size_t SignalLength = 100;

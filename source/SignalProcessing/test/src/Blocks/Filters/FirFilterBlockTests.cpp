@@ -96,7 +96,6 @@ TEST(FirFilterBlockTests, getCoefficient_shouldReturnCurrentCoefficients)
     EXPECT_EQ(block.getCoefficients(), coefficients3);
 }
 
-
 TEST(FirFilterBlockTests, firFilterBlock_shouldFilter)
 {
     constexpr size_t SignalLength = 100;
