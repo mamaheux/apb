@@ -34,6 +34,12 @@ namespace apb
     {
         a.multiplySubtract(b, c);
     }
+
+    template <class T>
+    inline T abs(T a)
+    {
+        return a < 0 ? -a : a;
+    }
 }
 
 #endif

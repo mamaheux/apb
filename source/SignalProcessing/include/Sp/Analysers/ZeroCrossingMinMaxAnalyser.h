@@ -1,13 +1,9 @@
 #ifndef ZERO_CROSSING_MIN_MAX_ANALYSER_H
 #define ZERO_CROSSING_MIN_MAX_ANALYSER_H
 
-#include <Utils/Math/FixedPoint.h>
-
-#include <limits>
-
 namespace apb
 {
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
+    template <class T>
     class ZeroCrossingMinMaxAnalyser
     {
         T m_lastSample;
@@ -19,7 +15,7 @@ namespace apb
         T m_max;
 
     public:
-        ZeroCrossingMinMaxAnalyser();
+        ZeroCrossingMinMaxAnalyser(T initialMin = 0, T initialMax = 0);
         virtual ~ZeroCrossingMinMaxAnalyser();
 
         T getMin() const;
@@ -28,41 +24,45 @@ namespace apb
         void step(T sample);
     };
 
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
-    inline ZeroCrossingMinMaxAnalyser<T, MinTypeValue, MaxTypeValue>::ZeroCrossingMinMaxAnalyser() :
-        m_currentMin(MaxTypeValue), m_currentMax(MinTypeValue), m_min(0), m_max(0)
+    template <class T>
+    inline ZeroCrossingMinMaxAnalyser<T>::ZeroCrossingMinMaxAnalyser(T initialMin, T initialMax) :
+        m_lastSample(0),
+        m_currentMin(0),
+        m_currentMax(0),
+        m_min(initialMin),
+        m_max(initialMax)
     {
     }
 
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
-    inline ZeroCrossingMinMaxAnalyser<T, MinTypeValue, MaxTypeValue>::~ZeroCrossingMinMaxAnalyser()
+    template <class T>
+    inline ZeroCrossingMinMaxAnalyser<T>::~ZeroCrossingMinMaxAnalyser()
     {
     }
 
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
-    inline T ZeroCrossingMinMaxAnalyser<T, MinTypeValue, MaxTypeValue>::getMin() const
+    template <class T>
+    inline T ZeroCrossingMinMaxAnalyser<T>::getMin() const
     {
         return m_min;
     };
 
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
-    inline T ZeroCrossingMinMaxAnalyser<T, MinTypeValue, MaxTypeValue>::getMax() const
+    template <class T>
+    inline T ZeroCrossingMinMaxAnalyser<T>::getMax() const
     {
         return m_max;
     };
 
-    template <class T, int64_t MinTypeValue, int64_t MaxTypeValue>
-    inline void ZeroCrossingMinMaxAnalyser<T, MinTypeValue, MaxTypeValue>::step(T sample)
+    template <class T>
+    inline void ZeroCrossingMinMaxAnalyser<T>::step(T sample)
     {
-        if (m_lastSample < 0 && sample > 0)
+        if (m_lastSample < 0 && sample >= 0)
         {
             m_min = m_currentMin;
-            m_currentMin = MaxTypeValue;
+            m_currentMin = 0;
         }
-        else if (m_lastSample > 0 && sample < 0)
+        else if (m_lastSample > 0 && sample <= 0)
         {
             m_max = m_currentMax;
-            m_currentMax = MinTypeValue;
+            m_currentMax = 0;
         }
 
         m_lastSample = sample;
@@ -76,11 +76,6 @@ namespace apb
             m_currentMax = sample;
         }
     };
-
-    typedef ZeroCrossingMinMaxAnalyser<double, -999999999999999, 999999999999999>
-        DoubleZeroCrossingMinMaxAnalyser;
-    typedef ZeroCrossingMinMaxAnalyser<float, -999999999999999, 999999999999999>
-            FloatZeroCrossingMinMaxAnalyser;
 }
 
 #endif

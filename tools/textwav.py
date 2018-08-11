@@ -49,9 +49,9 @@ def toTextWave(inputFilePath, outputFilePath, gain):
             
 def printUsage():
     print("Convert a wave file to a text wave file:")
-    print("\tpython textwav.py totextwave input_file_path output_file_path")
+    print("\tpython textwav.py totextwave input_file_path output_file_path gain")
     print("Convert a text wave file to a wave file:")
-    print("\tpython textwav.py towave input_file_path output_file_path\n\n")
+    print("\tpython textwav.py towave input_file_path output_file_path gain\n\n")
     
 if __name__ == "__main__":
     main()
