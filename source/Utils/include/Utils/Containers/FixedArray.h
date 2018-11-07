@@ -1,7 +1,7 @@
 #ifndef FIXED_ARRAY_H
 #define FIXED_ARRAY_H
 
-#include <Utils/Memory/ArrayIterator.h>
+#include <Utils/Containers/ArrayIterator.h>
 
 #include <cstddef>
 #include <stdexcept>

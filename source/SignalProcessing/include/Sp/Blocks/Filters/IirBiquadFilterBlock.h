@@ -5,7 +5,7 @@
 #include <Utils/Optimization/LoopUnrolling.h>
 #include <Utils/Math/FixedPoint.h>
 #include <Utils/Math/Helpers.h>
-#include <Utils/Memory/FixedArray.h>
+#include <Utils/Containers/FixedArray.h>
 
 namespace apb
 {

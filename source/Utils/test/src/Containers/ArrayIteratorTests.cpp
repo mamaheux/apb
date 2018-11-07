@@ -1,4 +1,4 @@
-#include <Utils/Memory/ArrayIterator.h>
+#include <Utils/Containers/ArrayIterator.h>
 
 #include <gtest/gtest.h>
 

@@ -1,8 +1,8 @@
 #ifndef SIGNAL_PROCESSING_BLOCK_H
 #define SIGNAL_PROCESSING_BLOCK_H
 
-#include <Utils/Memory/FixedHeapArray.h>
-#include <Utils/Memory/DspCircularBuffer.h>
+#include <Utils/Containers/FixedHeapArray.h>
+#include <Utils/Containers/DspCircularBuffer.h>
 
 #include <cstddef>
 #include <stdexcept>
