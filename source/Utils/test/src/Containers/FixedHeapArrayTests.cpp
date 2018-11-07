@@ -105,7 +105,7 @@ TEST(FixedHeapArrayTests, assignationOperator_notEmpty_shouldCopy)
     EXPECT_EQ(copiedTestee[1], 2);
 }
 
-TEST(FixedHeapArrayTests, moveAssignationOperator_empty_shouldMove)
+TEST(FixedHeapArrayTests, moveAssignmentOperator_empty_shouldMove)
 {
     FixedHeapArray<int> testee(2);
     testee[0] = 1;
@@ -121,7 +121,7 @@ TEST(FixedHeapArrayTests, moveAssignationOperator_empty_shouldMove)
     EXPECT_EQ(movedTestee[1], 2);
 }
 
-TEST(FixedHeapArrayTests, moveAssignationOperator_notEmpty_shouldMove)
+TEST(FixedHeapArrayTests, moveAssignmentOperator_notEmpty_shouldMove)
 {
     FixedHeapArray<int> testee(2);
     testee[0] = 1;

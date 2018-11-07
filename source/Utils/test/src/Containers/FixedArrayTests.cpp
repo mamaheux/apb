@@ -106,7 +106,7 @@ TEST(FixedArrayTests, assignationOperator_shouldCopy)
     EXPECT_EQ(copiedTestee[1], 2);
 }
 
-TEST(FixedArrayTests, moveAssignationOperator_shouldMove)
+TEST(FixedArrayTests, moveAssignmentOperator_shouldMove)
 {
     FixedArray<int, 2> testee;
     testee[0] = 1;
