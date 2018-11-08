@@ -18,6 +18,7 @@ namespace apb
 
     public:
         UniquePointerCommon();
+        constexpr UniquePointerCommon(std::nullptr_t);
         explicit UniquePointerCommon(T* pointer);
         UniquePointerCommon(const UniquePointerCommon<T, Deleter, Derived>& other) = delete;
         UniquePointerCommon(UniquePointerCommon<T, Deleter, Derived>&& other);
@@ -31,12 +32,20 @@ namespace apb
         UniquePointerCommon<T, Deleter, Derived>& operator=(const UniquePointerCommon<T, Deleter, Derived>& other) = delete;
         UniquePointerCommon<T, Deleter, Derived>& operator=(UniquePointerCommon<T, Deleter, Derived>&& other);
 
+        explicit operator bool();
+
         typedef T* PointerType;
     };
 
     template <class T, class Deleter, class Derived>
     inline UniquePointerCommon<T, Deleter, Derived>::UniquePointerCommon() : m_pointer(nullptr)
     {
+    }
+
+    template <class T, class Deleter, class Derived>
+    constexpr UniquePointerCommon<T, Deleter, Derived>::UniquePointerCommon(std::nullptr_t) : m_pointer(nullptr)
+    {
+
     }
 
     template <class T, class Deleter, class Derived>
@@ -87,11 +96,18 @@ namespace apb
         return *this;
     }
 
+    template <class T, class Deleter, class Derived>
+    UniquePointerCommon<T, Deleter, Derived>::operator bool()
+    {
+        return m_pointer != nullptr;
+    }
+
     template <class T, class Deleter = DefaultDeleter<T>>
     class UniquePointer : public UniquePointerCommon<T, Deleter, UniquePointer<T, Deleter>>
     {
     public:
         UniquePointer();
+        constexpr UniquePointer(std::nullptr_t);
         UniquePointer(T* pointer);
         UniquePointer(const UniquePointer<T, Deleter>& other) = delete;
         UniquePointer(UniquePointer<T, Deleter>&& other);
@@ -105,6 +121,12 @@ namespace apb
 
     template <class T, class Deleter>
     inline UniquePointer<T, Deleter>::UniquePointer()
+    {
+    }
+
+    template <class T, class Deleter>
+    constexpr UniquePointer<T, Deleter>::UniquePointer(std::nullptr_t) :
+            UniquePointerCommon<T, Deleter, UniquePointer<T, Deleter>>(nullptr)
     {
     }
 
@@ -149,6 +171,7 @@ namespace apb
     {
     public:
         UniquePointer();
+        constexpr UniquePointer(std::nullptr_t);
         UniquePointer(T* pointer);
         UniquePointer(const UniquePointer<T[], Deleter>& other) = delete;
         UniquePointer(UniquePointer<T[], Deleter>&& other);
@@ -161,6 +184,12 @@ namespace apb
 
     template <class T, class Deleter>
     inline UniquePointer<T[], Deleter>::UniquePointer()
+    {
+    }
+
+    template <class T, class Deleter>
+    constexpr UniquePointer<T[], Deleter>::UniquePointer(std::nullptr_t) :
+            UniquePointerCommon<T, Deleter, UniquePointer<T[], Deleter>>(nullptr)
     {
     }
 

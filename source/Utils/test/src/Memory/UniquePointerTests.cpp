@@ -73,6 +73,20 @@ TEST_F(UniquePointerTests, arrayDefaultConstructor_shouldSetThePointerToNullptr)
     EXPECT_EQ(pointer.get(), nullptr);
 }
 
+TEST_F(UniquePointerTests, nullptrConstructor_shouldSetThePointerToNullptr)
+{
+    UniquePointer<int> pointer(nullptr);
+
+    EXPECT_EQ(pointer.get(), nullptr);
+}
+
+TEST_F(UniquePointerTests, arrayNullptrConstructor_shouldSetThePointerToNullptr)
+{
+    UniquePointer<int[]> pointer(nullptr);
+
+    EXPECT_EQ(pointer.get(), nullptr);
+}
+
 TEST_F(UniquePointerTests, pointerConstructor_shouldSetThePointerToTheSpecifiedPointer)
 {
     {
@@ -244,6 +258,30 @@ TEST_F(UniquePointerTests, offsetAccessOperator_shouldReturnTheValueAtTheSpecifi
 
     EXPECT_EQ(pointer[0], 2);
     EXPECT_EQ(pointer[1], 5);
+}
+
+TEST_F(UniquePointerTests, boolOperator_shouldCheckThePointerValidity)
+{
+    UniquePointer<int> pointer1;
+    UniquePointer<int> pointer2(new int);
+
+    if (pointer1)
+    {
+        FAIL();
+    }
+    else
+    {
+        SUCCEED();
+    }
+
+    if (!pointer2)
+    {
+        FAIL();
+    }
+    else
+    {
+        SUCCEED();
+    }
 }
 
 TEST_F(UniquePointerTests, comparisonOperators_shouldDoReturnTheRigthValues)
