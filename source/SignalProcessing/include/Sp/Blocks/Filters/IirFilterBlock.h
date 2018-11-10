@@ -6,6 +6,7 @@
 #include <Utils/Math/FixedPoint.h>
 #include <Utils/Math/Helpers.h>
 #include <Utils/Containers/FixedArray.h>
+#include <Utils/Memory/UniquePointer.h>
 
 namespace apb
 {
@@ -18,14 +19,14 @@ namespace apb
         static constexpr std::size_t InputHisorySize = 3;
         static constexpr std::size_t InputCount = 1;
 
-        FixedHeapArray<DspCircularBuffer<T>> m_intermediateBuffers;
-        FixedHeapArray<IirBiquadFilterBlock<T>*> m_filters;
+        FixedHeapArray<typename IirFilterBlock<T>::BufferTypePointer> m_intermediateBuffers;
+        FixedHeapArray<UniquePointer<IirBiquadFilterBlock<T>>> m_filters;
 
     public:
-        IirFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-                             DspCircularBuffer<T>* output,
-                             const FixedHeapArray<FixedArray<T, 2>>& aCoefficients,
-                             const FixedHeapArray<FixedArray<T, 3>>& bCoefficients);
+        IirFilterBlock(typename IirFilterBlock<T>::InputBufferType&& inputs,
+            typename IirFilterBlock<T>::BufferTypePointer& output,
+            const FixedHeapArray<FixedArray<T, 2>>& aCoefficients,
+            const FixedHeapArray<FixedArray<T, 3>>& bCoefficients);
         ~IirFilterBlock() override;
 
         const FixedArray<T, 2>& getACoefficients(std::size_t i) const;
@@ -43,8 +44,8 @@ namespace apb
     };
 
     template <class T>
-    inline IirFilterBlock<T>::IirFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-        DspCircularBuffer<T>* output,
+    inline IirFilterBlock<T>::IirFilterBlock(typename IirFilterBlock<T>::InputBufferType&& inputs,
+        typename IirFilterBlock<T>::BufferTypePointer& output,
         const FixedHeapArray<FixedArray<T, 2>>& aCoefficients,
         const FixedHeapArray<FixedArray<T, 3>>& bCoefficients) :
         SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, InputCount),
@@ -60,6 +61,11 @@ namespace apb
             throw std::runtime_error("The coefficients size should be greater than 0.");
         }
 
+        for (auto& buffer : m_intermediateBuffers)
+        {
+            buffer = makeShared<typename IirFilterBlock<T>::BufferType>();
+        }
+
         if (m_filters.size() == 1)
         {
             createSingleBiquadFilterBlock(aCoefficients, bCoefficients);
@@ -71,17 +77,13 @@ namespace apb
 
         for (auto& buffer : m_intermediateBuffers)
         {
-            buffer.freeze();
+            buffer->freeze();
         }
     }
 
     template <class T>
     inline IirFilterBlock<T>::~IirFilterBlock()
     {
-        for (auto filter : m_filters)
-        {
-            delete filter;
-        }
     }
 
     template <class T>
@@ -128,7 +130,7 @@ namespace apb
     template <class T>
     inline void IirFilterBlock<T>::step()
     {
-        for (auto filter : m_filters)
+        for (auto& filter : m_filters)
         {
             filter->step();
         }
@@ -138,8 +140,8 @@ namespace apb
     inline void IirFilterBlock<T>::createSingleBiquadFilterBlock(const FixedHeapArray<FixedArray<T, 2>>& aCoefficients,
         const FixedHeapArray<FixedArray<T, 3>>& bCoefficients)
     {
-        m_filters[0] = new IirBiquadFilterBlock<T>(FixedHeapArray<DspCircularBuffer<T>*>({this->m_inputs[0]}),
-            this->m_output, aCoefficients[0], bCoefficients[0]);
+        auto filter = new IirBiquadFilterBlock<T>({this->m_inputs[0]}, this->m_output, aCoefficients[0], bCoefficients[0]);
+        m_filters[0] = std::move(UniquePointer<IirBiquadFilterBlock<T>>(filter));
     }
 
     template <class T>
@@ -149,23 +151,20 @@ namespace apb
         std::size_t lastFilterIndex = m_filters.size() - 1;
         std::size_t lastIntermediateBufferIndex = m_intermediateBuffers.size() - 1;
 
-        m_filters[0] = new IirBiquadFilterBlock<T>(FixedHeapArray<DspCircularBuffer<T>*>({this->m_inputs[0]}),
-            &m_intermediateBuffers[0],
-            aCoefficients[0],
-            bCoefficients[0]);
+        auto filter = new IirBiquadFilterBlock<T>({this->m_inputs[0]}, m_intermediateBuffers[0],
+            aCoefficients[0], bCoefficients[0]);
+        m_filters[0] = std::move(UniquePointer<IirBiquadFilterBlock<T>>(filter));
 
         for (std::size_t i = 1; i < lastFilterIndex; i++)
         {
-            m_filters[i] = new IirBiquadFilterBlock<T>(FixedHeapArray<DspCircularBuffer<T>*>({&m_intermediateBuffers[i - 1]}),
-                &m_intermediateBuffers[i],
-                aCoefficients[i],
-                bCoefficients[i]);
+            filter = new IirBiquadFilterBlock<T>({m_intermediateBuffers[i - 1]}, m_intermediateBuffers[i],
+                aCoefficients[i], bCoefficients[i]);
+            m_filters[i] = std::move(UniquePointer<IirBiquadFilterBlock<T>>(filter));
         }
 
-        m_filters[lastFilterIndex] = new IirBiquadFilterBlock<T>(FixedHeapArray<DspCircularBuffer<T>*>({&m_intermediateBuffers[lastIntermediateBufferIndex]}),
-            this->m_output,
-            aCoefficients[lastFilterIndex],
-            bCoefficients[lastFilterIndex]);
+        filter = new IirBiquadFilterBlock<T>({m_intermediateBuffers[lastIntermediateBufferIndex]}, this->m_output,
+                aCoefficients[lastFilterIndex], bCoefficients[lastFilterIndex]);
+        m_filters[lastFilterIndex] = std::move(UniquePointer<IirBiquadFilterBlock<T>>(filter));
     }
 }
 

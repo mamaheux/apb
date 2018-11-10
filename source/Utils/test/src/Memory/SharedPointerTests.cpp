@@ -218,6 +218,21 @@ TEST_F(SharedPointerTests, copyConstructor_shouldIncreaseTheCount)
     EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
+TEST_F(SharedPointerTests, copyConstructor_nullptr_shouldInitializeToNullptr)
+{
+    {
+        TestsDeleterSharedPointer<int> pointer;
+        TestsDeleterSharedPointer<int> copy(pointer);
+
+        EXPECT_EQ(copy.get(), nullptr);
+        EXPECT_EQ(copy.count(), 0);
+    }
+    EXPECT_EQ(counterAllocatorCallCount, 0);
+    EXPECT_EQ(counterDeleterCallCount, 0);
+    EXPECT_EQ(tDeleterCallCount, 0);
+    EXPECT_EQ(arrayTDeleterCallCount, 0);
+}
+
 TEST_F(SharedPointerTests, arrayCopyConstructor_shouldIncreaseTheCount)
 {
     {
@@ -241,6 +256,21 @@ TEST_F(SharedPointerTests, arrayCopyConstructor_shouldIncreaseTheCount)
     EXPECT_EQ(counterDeleterCallCount, 1);
     EXPECT_EQ(tDeleterCallCount, 0);
     EXPECT_EQ(arrayTDeleterCallCount, 1);
+}
+
+TEST_F(SharedPointerTests, arrayCopyConstructor_nullptr_shouldInitializeToNullptr)
+{
+    {
+        TestsDeleterSharedPointer<int[]> pointer;
+        TestsDeleterSharedPointer<int[]> copy(pointer);
+
+        EXPECT_EQ(copy.get(), nullptr);
+        EXPECT_EQ(copy.count(), 0);
+    }
+    EXPECT_EQ(counterAllocatorCallCount, 0);
+    EXPECT_EQ(counterDeleterCallCount, 0);
+    EXPECT_EQ(tDeleterCallCount, 0);
+    EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
 TEST_F(SharedPointerTests, moveConstructor_shouldGiveTheOwnership)
@@ -420,6 +450,24 @@ TEST_F(SharedPointerTests, assignmentOperator_shouldDeleteAndIncreaseTheCount)
     EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
+TEST_F(SharedPointerTests, assignmentOperator_nullptr_shouldDeleteAndIncreaseTheCount)
+{
+    {
+        TestsDeleterSharedPointer<int> pointer1;
+        TestsDeleterSharedPointer<int> pointer2;
+
+        pointer2 = pointer1;
+
+        EXPECT_EQ(pointer2.get(), nullptr);
+        EXPECT_EQ(pointer2.count(), 0);
+    }
+
+    EXPECT_EQ(counterAllocatorCallCount, 0);
+    EXPECT_EQ(counterDeleterCallCount, 0);
+    EXPECT_EQ(tDeleterCallCount, 0);
+    EXPECT_EQ(arrayTDeleterCallCount, 0);
+}
+
 TEST_F(SharedPointerTests, arrayAssignmentOperator_shouldDeleteAndIncreaseTheCount)
 {
     {
@@ -441,6 +489,24 @@ TEST_F(SharedPointerTests, arrayAssignmentOperator_shouldDeleteAndIncreaseTheCou
     EXPECT_EQ(counterDeleterCallCount, 2);
     EXPECT_EQ(tDeleterCallCount, 0);
     EXPECT_EQ(arrayTDeleterCallCount, 2);
+}
+
+TEST_F(SharedPointerTests, arrayAssignmentOperator_nullptr_shouldDeleteAndIncreaseTheCount)
+{
+    {
+        TestsDeleterSharedPointer<int[]> pointer1;
+        TestsDeleterSharedPointer<int[]> pointer2;
+
+        pointer2 = pointer1;
+
+        EXPECT_EQ(pointer2.get(), nullptr);
+        EXPECT_EQ(pointer2.count(), 0);
+    }
+
+    EXPECT_EQ(counterAllocatorCallCount, 0);
+    EXPECT_EQ(counterDeleterCallCount, 0);
+    EXPECT_EQ(tDeleterCallCount, 0);
+    EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
 TEST_F(SharedPointerTests, moveAssignmentOperator_shouldDeleteAndSetGiveTheOwnership)

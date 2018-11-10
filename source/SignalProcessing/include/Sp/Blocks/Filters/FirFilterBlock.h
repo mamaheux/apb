@@ -17,8 +17,8 @@ namespace apb
         FixedHeapArray<T>* m_currentCoefficients;
         FixedHeapArray<T> m_coefficients[2];
     public:
-        FirFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-            DspCircularBuffer<T>* output,
+        FirFilterBlock(typename FirFilterBlock<T, UnrollCount>::InputBufferType&& inputs,
+            typename FirFilterBlock<T, UnrollCount>::BufferTypePointer& output,
             const FixedHeapArray<T>& coefficients);
         ~FirFilterBlock() override;
 
@@ -29,8 +29,9 @@ namespace apb
     };
 
     template <class T, std::size_t UnrollCount>
-    inline FirFilterBlock<T, UnrollCount>::FirFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-        DspCircularBuffer<T>* output,
+    inline FirFilterBlock<T, UnrollCount>::FirFilterBlock(
+        typename FirFilterBlock<T, UnrollCount>::InputBufferType&& inputs,
+        typename FirFilterBlock<T, UnrollCount>::BufferTypePointer& output,
         const FixedHeapArray<T>& coefficients) :
         SignalProcessingBlock<T>(std::move(inputs), output, coefficients.size(), InputCount),
         m_coefficientsSize(coefficients.size())

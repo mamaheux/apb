@@ -28,8 +28,8 @@ namespace apb
         FixedArray<T, 3> m_bCoefficients[2];
 
     public:
-        IirBiquadFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-            DspCircularBuffer<T>* output,
+        IirBiquadFilterBlock(typename IirBiquadFilterBlock<T>::InputBufferType&& inputs,
+            typename IirBiquadFilterBlock<T>::BufferTypePointer& output,
             const FixedArray<T, 2>& aCoefficients,
             const FixedArray<T, 3>& bCoefficients);
         ~IirBiquadFilterBlock() override;
@@ -42,8 +42,8 @@ namespace apb
     };
 
     template <class T>
-    inline IirBiquadFilterBlock<T>::IirBiquadFilterBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-        DspCircularBuffer<T>* output,
+    inline IirBiquadFilterBlock<T>::IirBiquadFilterBlock(typename IirBiquadFilterBlock<T>::InputBufferType&& inputs,
+        typename IirBiquadFilterBlock<T>::BufferTypePointer& output,
         const FixedArray<T, 2>& aCoefficients,
         const FixedArray<T, 3>& bCoefficients) :
         SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, InputCount)

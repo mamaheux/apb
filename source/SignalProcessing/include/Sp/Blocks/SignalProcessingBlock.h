@@ -3,6 +3,7 @@
 
 #include <Utils/Containers/FixedHeapArray.h>
 #include <Utils/Containers/DspCircularBuffer.h>
+#include <Utils/Memory/SharedPointer.h>
 
 #include <cstddef>
 #include <stdexcept>
@@ -11,7 +12,6 @@ namespace apb
 {
     /*
      * A class representing a block in a signal processing system.
-     * The SignalProcessingSystem class allocate and deallocate dsp circular buffers.
      */
     template <class T>
     class SignalProcessingBlock
@@ -19,13 +19,19 @@ namespace apb
         std::size_t m_inputHistorySize;
         std::size_t m_inputCount;
 
+    public:
+
+        typedef DspCircularBuffer<T> BufferType;
+        typedef SharedPointer<DspCircularBuffer<T>> BufferTypePointer;
+        typedef FixedHeapArray<BufferTypePointer> InputBufferType;
+
     protected:
-        FixedHeapArray<DspCircularBuffer<T>*> m_inputs;
-        DspCircularBuffer<T>* m_output;
+        InputBufferType m_inputs;
+        BufferTypePointer m_output;
 
     public:
-        SignalProcessingBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-            DspCircularBuffer<T>* output,
+        SignalProcessingBlock(InputBufferType&& inputs,
+            BufferTypePointer& output,
             std::size_t inputHistorySize,
             std::size_t inputCount);
         virtual ~SignalProcessingBlock();
@@ -37,8 +43,8 @@ namespace apb
     };
 
     template <class T>
-    inline SignalProcessingBlock<T>::SignalProcessingBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-        DspCircularBuffer<T>* output,
+    inline SignalProcessingBlock<T>::SignalProcessingBlock(SignalProcessingBlock<T>::InputBufferType&& inputs,
+        SignalProcessingBlock<T>::BufferTypePointer& output,
         std::size_t inputHistorySize,
         std::size_t inputCount) :
         m_inputs(inputs), m_output(output), m_inputHistorySize(inputHistorySize), m_inputCount(inputCount)

@@ -87,7 +87,10 @@ namespace apb
         SharedPointerCommon(const Type& other) :
             m_pointer(other.m_pointer), m_counter(other.m_counter)
         {
-            m_counter->add();
+            if (m_counter)
+            {
+                m_counter->add();
+            }
         }
 
         SharedPointerCommon(Type&& other) :
@@ -149,7 +152,11 @@ namespace apb
 
             m_pointer = other.m_pointer;
             m_counter = other.m_counter;
-            m_counter->add();
+
+            if (m_counter)
+            {
+                m_counter->add();
+            }
         }
 
         Type& operator=(Type&& other)

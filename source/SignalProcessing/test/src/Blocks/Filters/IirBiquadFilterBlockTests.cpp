@@ -1,4 +1,5 @@
 #include <Sp/Blocks/Filters/IirBiquadFilterBlock.h>
+#include <Helpers/FixedPointAssertions.h>
 
 #include <gtest/gtest.h>
 
@@ -8,11 +9,11 @@
 using namespace apb;
 using namespace std;
 
-TEST(IirBiquadFilterBlockTests, step_double_shouldStoreFilterResult) \
+TEST(IirBiquadFilterBlockTests, step_double_shouldStoreTheFilterResult) \
 {
-    DspCircularBuffer<double> input;
-    DspCircularBuffer<double> output;
-    output.reserveHistorySize(1);
+    IirBiquadFilterBlock<double>::BufferTypePointer input = makeShared<IirBiquadFilterBlock<double>::BufferType>();
+    IirBiquadFilterBlock<double>::BufferTypePointer output = makeShared<IirBiquadFilterBlock<double>::BufferType>();
+    output->reserveHistorySize(1);
 
     FixedArray<double, 2> aCoefficients1({2, 2});
     FixedArray<double, 3> bCoefficients1({2, 2, 2});
@@ -20,64 +21,62 @@ TEST(IirBiquadFilterBlockTests, step_double_shouldStoreFilterResult) \
     FixedArray<double, 2> aCoefficients2({3, 3});
     FixedArray<double, 3> bCoefficients2({3, 3, 3});
 
-    FixedHeapArray<DspCircularBuffer<double>*> inputs({&input});
-    IirBiquadFilterBlock<double> block(move(inputs), &output, aCoefficients1, bCoefficients1);
+    IirBiquadFilterBlock<double>::InputBufferType inputs({input});
+    IirBiquadFilterBlock<double> block(move(inputs), output, aCoefficients1, bCoefficients1);
 
-    input.freeze();
-    output.freeze();
+    input->freeze();
+    output->freeze();
 
-    input.store(1);
-    input.store(2);
-    input.store(3);
+    input->store(1);
+    input->store(2);
+    input->store(3);
 
-    output.store(4);
-    output.store(5);
+    output->store(4);
+    output->store(5);
 
     block.step();
-    EXPECT_EQ(output[0], -6);
+    EXPECT_EQ((*output)[0], -6);
 
     block.setCoefficients(aCoefficients2, bCoefficients2);
     block.step();
-    EXPECT_EQ(output[0], 21);
+    EXPECT_EQ((*output)[0], 21);
 }
 
-TEST(IirBiquadFilterBlockTests, step_FixedPoint_shouldStoreFilterResult)
+TEST(IirBiquadFilterBlockTests, step_FixedPoint_shouldStoreTheFilterResult)
 {
-    DspCircularBuffer<FixedPointQ15_16> input;
-    DspCircularBuffer<FixedPointQ15_16> output;
-    input.reserveHistorySize(1);
-    output.reserveHistorySize(1);
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer input =
+        makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer output =
+        makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    output->reserveHistorySize(1);
 
     FixedArray<FixedPointQ15_16, 2> aCoefficients({2.0, 2.0});
     FixedArray<FixedPointQ15_16, 3> bCoefficients({2.0, 2.0, 2.0});
 
-    FixedHeapArray<DspCircularBuffer<FixedPointQ15_16>*> inputs({&input});
-    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), &output, aCoefficients, bCoefficients);
+    IirBiquadFilterBlock<FixedPointQ15_16>::InputBufferType inputs({input});
+    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), output, aCoefficients, bCoefficients);
 
-    input.freeze();
-    output.freeze();
+    input->freeze();
+    output->freeze();
 
-    input.store(1.0);
-    input.store(2.0);
-    input.store(3.0);
+    input->store(1.0);
+    input->store(2.0);
+    input->store(3.0);
 
-    auto i0 = input[0];
-    auto i1 = input[1];
-    auto i2 = input[2];
-
-    output.store(4.0);
-    output.store(5.0);
+    output->store(4.0);
+    output->store(5.0);
 
     block.step();
-    EXPECT_EQ(output[0], -6.0);
+    EXPECT_EQ((*output)[0], -6.0);
 }
 
 TEST(IirBiquadFilterBlockTests, getCoefficients_shouldReturnCurrentCoefficients)
 {
-    DspCircularBuffer<FixedPointQ15_16> input;
-    DspCircularBuffer<FixedPointQ15_16> output;
-    input.reserveHistorySize(1);
-    output.reserveHistorySize(1);
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer input =
+            makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer output =
+            makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    output->reserveHistorySize(1);
 
     FixedArray<FixedPointQ15_16, 2> aCoefficients1({1.0, 2.0});
     FixedArray<FixedPointQ15_16, 3> bCoefficients1({3.0, 2.0, 1.0});
@@ -88,8 +87,8 @@ TEST(IirBiquadFilterBlockTests, getCoefficients_shouldReturnCurrentCoefficients)
     FixedArray<FixedPointQ15_16, 2> aCoefficients3({3.0, 4.0});
     FixedArray<FixedPointQ15_16, 3> bCoefficients3({5.0, 4.0, 3.0});
 
-    FixedHeapArray<DspCircularBuffer<FixedPointQ15_16>*> inputs({&input});
-    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), &output, aCoefficients1, bCoefficients1);
+    IirBiquadFilterBlock<FixedPointQ15_16>::InputBufferType inputs({input});
+    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), output, aCoefficients1, bCoefficients1);
 
     EXPECT_EQ(block.getACoefficients(), aCoefficients1);
     EXPECT_EQ(block.getBCoefficients(), bCoefficients1);
@@ -112,19 +111,21 @@ TEST(IirBiquadFilterBlockTests, iirBiquadFilterBlock_shouldFilter)
     constexpr double F1 = 1000;
     constexpr double F2 = 15000;
 
-    DspCircularBuffer<FixedPointQ15_16> input;
-    DspCircularBuffer<FixedPointQ15_16> output;
-    input.reserveHistorySize(SignalLength);
-    output.reserveHistorySize(SignalLength);
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer input =
+            makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    IirBiquadFilterBlock<FixedPointQ15_16>::BufferTypePointer output =
+            makeShared<IirBiquadFilterBlock<FixedPointQ15_16>::BufferType>();
+    input->reserveHistorySize(SignalLength);
+    output->reserveHistorySize(SignalLength);
 
     FixedArray<FixedPointQ15_16, 2> aCoefficients({-1.72377617276, 0.757546944479});
     FixedArray<FixedPointQ15_16, 3> bCoefficients({0.00844269292908, 0.0168853858582, 0.00844269292908});
 
-    FixedHeapArray<DspCircularBuffer<FixedPointQ15_16>*> inputs({&input});
-    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), &output, aCoefficients, bCoefficients);
+    IirBiquadFilterBlock<FixedPointQ15_16>::InputBufferType inputs({input});
+    IirBiquadFilterBlock<FixedPointQ15_16> block(move(inputs), output, aCoefficients, bCoefficients);
 
-    input.freeze();
-    output.freeze();
+    input->freeze();
+    output->freeze();
 
     FixedHeapArray<FixedPointQ15_16> expectedOutput(
     {
@@ -142,13 +143,13 @@ TEST(IirBiquadFilterBlockTests, iirBiquadFilterBlock_shouldFilter)
     for (size_t i = 0; i < SignalLength; i++)
     {
         FixedPointQ15_16 nextInputValue = A1 * cos(2 * M_PI * F1 * i / Fs) + A2 * cos(2 * M_PI * F2 * i / Fs);
-        input.store(nextInputValue);
+        input->store(nextInputValue);
         block.step();
     }
 
     ASSERT_EQ(expectedOutput.size(), SignalLength);
     for (size_t i = 0; i < SignalLength; i++)
     {
-        EXPECT_LT(abs(static_cast<double>(output[SignalLength - i] - expectedOutput[i])), 0.001);
+        EXPECT_NEAR_FIXED_POINT((*output)[SignalLength - i], expectedOutput[i], 0.001);
     }
 }

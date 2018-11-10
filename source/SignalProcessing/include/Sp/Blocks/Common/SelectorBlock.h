@@ -13,7 +13,8 @@ namespace apb
         std::size_t m_currentInputIndex;
 
     public:
-        SelectorBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs, DspCircularBuffer<T>* output);
+        SelectorBlock(typename SelectorBlock<T>::InputBufferType&& inputs,
+            typename SelectorBlock<T>::BufferTypePointer& output);
         ~SelectorBlock() override;
 
         std::size_t getCurrentInputIndex() const;
@@ -23,8 +24,8 @@ namespace apb
     };
 
     template <class T>
-    inline SelectorBlock<T>::SelectorBlock(FixedHeapArray<DspCircularBuffer<T>*>&& inputs,
-        DspCircularBuffer<T>* output) :
+    inline SelectorBlock<T>::SelectorBlock(typename SelectorBlock<T>::InputBufferType&& inputs,
+        typename SelectorBlock<T>::BufferTypePointer& output) :
         SignalProcessingBlock<T>(std::move(inputs), output, InputHisorySize, inputs.size()),
         m_currentInputIndex(0)
     {
