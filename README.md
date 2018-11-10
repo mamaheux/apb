@@ -1,31 +1,31 @@
-#apb - Audio Processing Box
+# apb - Audio Processing Box
 
 This is an educational audio processing project. The goal is to learn as much as possible, so everything is coded from scratch.
 
-##Description
+## Description
 
 The ultimate goal is to develop a portable device that is able to replace Bluetooth lineout devices and guitar effect pedals.
 
-###Bluetooth Lineout
+### Bluetooth Lineout
 - Stereo output
 - Volume control
 
-###Signal processing
+### Signal processing
 - Mono input
 - Mono output
 - Real-time audio effects
 
-##Subprojects
+## Subprojects
 
-###Signal Processing
+### Signal Processing
 This contains everything related to signal processing such as FIR and IIR filters.
 
-###Utils
+### Utils
 This contains everything related to data structure, memory management, optimization and math.
 
-##Setup
+## Setup
 
-###Submodule Setup
+### Submodule Setup
 ```shell
 git submodule init
 git submodule update
