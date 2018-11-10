@@ -71,16 +71,19 @@ namespace apb
         }
 
         explicit SharedPointerCommon(T* pointer) :
-            m_pointer(pointer)
+            m_pointer(pointer), m_counter(nullptr)
         {
-            try
+            if (m_pointer)
             {
-                m_counter = m_counterAllocator();
-            }
-            catch (...)
-            {
-                m_pointerDeleter(m_pointer);
-                throw;
+                try
+                {
+                    m_counter = m_counterAllocator();
+                }
+                catch (...)
+                {
+                    m_pointerDeleter(m_pointer);
+                    throw;
+                }
             }
         }
 

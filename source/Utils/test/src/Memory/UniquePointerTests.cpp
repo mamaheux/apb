@@ -68,24 +68,24 @@ protected:
     EXPECT_EQ(deleterCallCount, 0); \
     EXPECT_EQ(arrayDeleterCallCount, count);
 
-#define DECLARE_POINTER_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_SPECIFIED_POINTER(type, cPointerType, typeInstanciation, prefix) \
+#define DECLARE_POINTER_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_SPECIFIED_POINTER(type, cPointerType, typeNew, prefix) \
     TEST_F(UniquePointerTests, prefix##PointerConstructor_shouldSetThePointerToTheSpecifiedPointer) \
     { \
         { \
-            cPointerType valuePointer = typeInstanciation; \
+            cPointerType valuePointer = typeNew; \
             UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(valuePointer); \
     \
             EXPECT_EQ(pointer.get(), valuePointer); \
         } \
     \
-        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1); \
     }
 
-#define DECLARE_MOVE_CONSTRUCTOR_SHOULD_GIVE_THE_OWNERSHIP(type, cPointerType, typeInstanciation, prefix) \
+#define DECLARE_MOVE_CONSTRUCTOR_SHOULD_GIVE_THE_OWNERSHIP(type, cPointerType, typeNew, prefix) \
     TEST_F(UniquePointerTests, prefix##MoveConstructor_shouldGiveTheOwnership) \
     { \
         { \
-            cPointerType valuePointer = typeInstanciation; \
+            cPointerType valuePointer = typeNew; \
             UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(valuePointer); \
             UniquePointer<type, UniquePointerTestsDeleter<type>> movedPointer(move(pointer)); \
     \
@@ -93,47 +93,47 @@ protected:
             EXPECT_EQ(movedPointer, valuePointer); \
         } \
     \
-        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1); \
     }
 
-#define DECLARE_RELEASE_SHOULD_DELETE_AND_SET_NULLPTR(type, typeInstanciation, prefix) \
+#define DECLARE_RELEASE_SHOULD_DELETE_AND_SET_NULLPTR(type, typeNew, prefix) \
     TEST_F(UniquePointerTests, prefix##Release_shouldDeleteAndSetNullptr) \
     { \
-        UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeInstanciation); \
+        UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeNew); \
         pointer.release(); \
     \
         EXPECT_EQ(pointer, nullptr); \
-        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1); \
     }
 
-#define DECLARE_RESET_SHOULD_DELETE_AND_REPLACE_THE_POINTER(type, cPointerType, typeInstanciation, prefix) \
+#define DECLARE_RESET_SHOULD_DELETE_AND_REPLACE_THE_POINTER(type, cPointerType, typeNew, prefix) \
     TEST_F(UniquePointerTests, prefix##Reset_shouldDeleteAndReplaceThePointer) \
     { \
         { \
-            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeInstanciation); \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeNew); \
     \
-            cPointerType valuePointer = typeInstanciation; \
+            cPointerType valuePointer = typeNew; \
             pointer.reset(valuePointer); \
     \
             EXPECT_EQ(pointer, valuePointer); \
-            EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+            EXPECT_DELETER_CALL_COUNT(prefix, 1); \
         } \
      \
         EXPECT_DELETER_CALL_COUNT(prefix, 2) \
     }
 
-#define DECLARE_MOVE_ASSIGNMENT_OPERATOR_SHOULD_DELETE_AND_GIVE_THE_OWNSERSHIP(type, cPointerType, typeInstanciation, prefix) \
+#define DECLARE_MOVE_ASSIGNMENT_OPERATOR_SHOULD_DELETE_AND_GIVE_THE_OWNSERSHIP(type, cPointerType, typeNew, prefix) \
     TEST_F(UniquePointerTests, prefix##MoveAssignmentOperator_shouldDeleteAndGiveTheOwnership) \
     { \
         { \
-            cPointerType valuePointer = typeInstanciation; \
+            cPointerType valuePointer = typeNew; \
             UniquePointer<type, UniquePointerTestsDeleter<type>> pointer1(valuePointer); \
-            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer2(typeInstanciation); \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer2(typeNew); \
     \
             pointer2 = move(pointer1); \
     \
             EXPECT_EQ(pointer2, valuePointer); \
-            EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+            EXPECT_DELETER_CALL_COUNT(prefix, 1); \
         } \
     \
         EXPECT_DELETER_CALL_COUNT(prefix, 2) \
