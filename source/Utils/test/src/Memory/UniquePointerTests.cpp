@@ -58,184 +58,109 @@ protected:
     void TearDown() override {}
 };
 
-TEST_F(UniquePointerTests, defaultConstructor_shouldSetThePointerToNullptr)
-{
-    UniquePointer<int> pointer;
+#define EXPECT_DELETER_CALL_COUNT(prefix, count) EXPECT_##prefix##_DELETER_CALL_COUNT(count) \
 
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(UniquePointerTests, arrayDefaultConstructor_shouldSetThePointerToNullptr)
-{
-    UniquePointer<int[]> pointer;
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(UniquePointerTests, nullptrConstructor_shouldSetThePointerToNullptr)
-{
-    UniquePointer<int> pointer(nullptr);
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(UniquePointerTests, arrayNullptrConstructor_shouldSetThePointerToNullptr)
-{
-    UniquePointer<int[]> pointer(nullptr);
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(UniquePointerTests, pointerConstructor_shouldSetThePointerToTheSpecifiedPointer)
-{
-    {
-        int* valuePointer = new int;
-        UniquePointer<int, UniquePointerTestsDeleter<int>> pointer(valuePointer);
-
-        EXPECT_EQ(pointer.get(), valuePointer);
-    }
-
-    EXPECT_EQ(deleterCallCount, 1);
+#define EXPECT_element_DELETER_CALL_COUNT(count) \
+    EXPECT_EQ(deleterCallCount, count); \
     EXPECT_EQ(arrayDeleterCallCount, 0);
-}
 
-TEST_F(UniquePointerTests, arrayPointerConstructor_shouldSetThePointerToTheSpecifiedPointer)
-{
-    {
-        int* valuesPointer = new int[2];
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer(valuesPointer);
+#define EXPECT_array_DELETER_CALL_COUNT(count) \
+    EXPECT_EQ(deleterCallCount, 0); \
+    EXPECT_EQ(arrayDeleterCallCount, count);
 
-        EXPECT_EQ(pointer.get(), valuesPointer);
+#define DECLARE_POINTER_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_SPECIFIED_POINTER(type, cPointerType, typeInstanciation, prefix) \
+    TEST_F(UniquePointerTests, prefix##PointerConstructor_shouldSetThePointerToTheSpecifiedPointer) \
+    { \
+        { \
+            cPointerType valuePointer = typeInstanciation; \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(valuePointer); \
+    \
+            EXPECT_EQ(pointer.get(), valuePointer); \
+        } \
+    \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
     }
 
-    EXPECT_EQ(deleterCallCount, 0);
-    EXPECT_EQ(arrayDeleterCallCount, 1);
-}
-
-TEST_F(UniquePointerTests, moveConstructor_shouldSetGiveTheOwnership)
-{
-    {
-        int* valuePointer = new int;
-        UniquePointer<int, UniquePointerTestsDeleter<int>> pointer(valuePointer);
-        UniquePointer<int, UniquePointerTestsDeleter<int>> movedPointer(move(pointer));
-
-        EXPECT_EQ(pointer, nullptr);
-        EXPECT_EQ(movedPointer, valuePointer);
+#define DECLARE_MOVE_CONSTRUCTOR_SHOULD_GIVE_THE_OWNERSHIP(type, cPointerType, typeInstanciation, prefix) \
+    TEST_F(UniquePointerTests, prefix##MoveConstructor_shouldGiveTheOwnership) \
+    { \
+        { \
+            cPointerType valuePointer = typeInstanciation; \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(valuePointer); \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> movedPointer(move(pointer)); \
+    \
+            EXPECT_EQ(pointer, nullptr); \
+            EXPECT_EQ(movedPointer, valuePointer); \
+        } \
+    \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
     }
 
-    EXPECT_EQ(deleterCallCount, 1);
-    EXPECT_EQ(arrayDeleterCallCount, 0);
-}
-
-TEST_F(UniquePointerTests, arrayMoveConstructor_shouldSetGiveTheOwnership)
-{
-    {
-        int* valuesPointer = new int[2];
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer(valuesPointer);
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> movedPointer(move(pointer));
-
-        EXPECT_EQ(pointer, nullptr);
-        EXPECT_TRUE(movedPointer == valuesPointer);
+#define DECLARE_RELEASE_SHOULD_DELETE_AND_SET_NULLPTR(type, typeInstanciation, prefix) \
+    TEST_F(UniquePointerTests, prefix##Release_shouldDeleteAndSetNullptr) \
+    { \
+        UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeInstanciation); \
+        pointer.release(); \
+    \
+        EXPECT_EQ(pointer, nullptr); \
+        EXPECT_DELETER_CALL_COUNT(prefix, 1) \
     }
 
-    EXPECT_EQ(deleterCallCount, 0);
-    EXPECT_EQ(arrayDeleterCallCount, 1);
-}
-
-TEST_F(UniquePointerTests, release_shouldDeleteAndSetToNullptr)
-{
-    UniquePointer<int, UniquePointerTestsDeleter<int>> pointer(new int);
-    pointer.release();
-
-    EXPECT_EQ(pointer, nullptr);
-    EXPECT_EQ(deleterCallCount, 1);
-    EXPECT_EQ(arrayDeleterCallCount, 0);
-}
-
-TEST_F(UniquePointerTests, arrayRelease_shouldDeleteAndSetToNullptr)
-{
-    UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer(new int[2]);
-    pointer.release();
-
-    EXPECT_EQ(pointer, nullptr);
-    EXPECT_EQ(deleterCallCount, 0);
-    EXPECT_EQ(arrayDeleterCallCount, 1);
-}
-
-TEST_F(UniquePointerTests, reset_shouldDeleteAndReplaceThePointer)
-{
-    {
-        UniquePointer<int, UniquePointerTestsDeleter<int>> pointer(new int);
-
-        int* valuePointer = new int;
-        pointer.reset(valuePointer);
-
-        EXPECT_EQ(pointer, valuePointer);
-        EXPECT_EQ(deleterCallCount, 1);
-        EXPECT_EQ(arrayDeleterCallCount, 0);
+#define DECLARE_RESET_SHOULD_DELETE_AND_REPLACE_THE_POINTER(type, cPointerType, typeInstanciation, prefix) \
+    TEST_F(UniquePointerTests, prefix##Reset_shouldDeleteAndReplaceThePointer) \
+    { \
+        { \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer(typeInstanciation); \
+    \
+            cPointerType valuePointer = typeInstanciation; \
+            pointer.reset(valuePointer); \
+    \
+            EXPECT_EQ(pointer, valuePointer); \
+            EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+        } \
+     \
+        EXPECT_DELETER_CALL_COUNT(prefix, 2) \
     }
 
-    EXPECT_EQ(deleterCallCount, 2);
-    EXPECT_EQ(arrayDeleterCallCount, 0);
-}
-
-TEST_F(UniquePointerTests, arrayReset_shouldDeleteAndReplaceThePointer)
-{
-    {
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer(new int[2]);
-
-        int* valuesPointer = new int[2];
-        pointer.reset(valuesPointer);
-
-        EXPECT_EQ(pointer, valuesPointer);
-        EXPECT_EQ(deleterCallCount, 0);
-        EXPECT_EQ(arrayDeleterCallCount, 1);
+#define DECLARE_MOVE_ASSIGNMENT_OPERATOR_SHOULD_DELETE_AND_GIVE_THE_OWNSERSHIP(type, cPointerType, typeInstanciation, prefix) \
+    TEST_F(UniquePointerTests, prefix##MoveAssignmentOperator_shouldDeleteAndGiveTheOwnership) \
+    { \
+        { \
+            cPointerType valuePointer = typeInstanciation; \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer1(valuePointer); \
+            UniquePointer<type, UniquePointerTestsDeleter<type>> pointer2(typeInstanciation); \
+    \
+            pointer2 = move(pointer1); \
+    \
+            EXPECT_EQ(pointer2, valuePointer); \
+            EXPECT_DELETER_CALL_COUNT(prefix, 1) \
+        } \
+    \
+        EXPECT_DELETER_CALL_COUNT(prefix, 2) \
     }
 
-    EXPECT_EQ(deleterCallCount, 0);
-    EXPECT_EQ(arrayDeleterCallCount, 2);
-}
+DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(UniquePointer)
+DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(UniquePointer)
 
-TEST_F(UniquePointerTests, moveAssignmentOperator_shouldDeleteAndSetGiveTheOwnership)
-{
-    {
-        int* valuePointer = new int;
-        UniquePointer<int, UniquePointerTestsDeleter<int>> pointer1(valuePointer);
-        UniquePointer<int, UniquePointerTestsDeleter<int>> pointer2(new int);
+DECLARE_POINTER_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_SPECIFIED_POINTER(int, int*, new int, element)
+DECLARE_POINTER_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_SPECIFIED_POINTER(int[], int*, new int[1], array)
 
-        pointer2 = move(pointer1);
+DECLARE_MOVE_CONSTRUCTOR_SHOULD_GIVE_THE_OWNERSHIP(int, int*, new int, element)
+DECLARE_MOVE_CONSTRUCTOR_SHOULD_GIVE_THE_OWNERSHIP(int[], int*, new int[1], array)
 
-        EXPECT_EQ(pointer2, valuePointer);
-        EXPECT_EQ(deleterCallCount, 1);
-        EXPECT_EQ(arrayDeleterCallCount, 0);
-    }
+DECLARE_RELEASE_SHOULD_DELETE_AND_SET_NULLPTR(int, new int, element)
+DECLARE_RELEASE_SHOULD_DELETE_AND_SET_NULLPTR(int[], new int[1], array)
 
-    EXPECT_EQ(deleterCallCount, 2);
-    EXPECT_EQ(arrayDeleterCallCount, 0);
-}
+DECLARE_RESET_SHOULD_DELETE_AND_REPLACE_THE_POINTER(int, int*, new int, element)
+DECLARE_RESET_SHOULD_DELETE_AND_REPLACE_THE_POINTER(int[], int*, new int[1], array)
 
-TEST_F(UniquePointerTests, arrayMoveAssignmentOperator_shouldDeleteAndSetGiveTheOwnership)
-{
-    {
-        int* valuesPointer = new int[2];
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer1(valuesPointer);
-        UniquePointer<int[], UniquePointerTestsDeleter<int[]>> pointer2(new int[2]);
-
-        pointer2 = move(pointer1);
-
-        EXPECT_EQ(pointer2, valuesPointer);
-        EXPECT_EQ(deleterCallCount, 0);
-        EXPECT_EQ(arrayDeleterCallCount, 1);
-    }
-
-    EXPECT_EQ(deleterCallCount, 0);
-    EXPECT_EQ(arrayDeleterCallCount, 2);
-}
+DECLARE_MOVE_ASSIGNMENT_OPERATOR_SHOULD_DELETE_AND_GIVE_THE_OWNSERSHIP(int, int*, new int, element)
+DECLARE_MOVE_ASSIGNMENT_OPERATOR_SHOULD_DELETE_AND_GIVE_THE_OWNSERSHIP(int[], int*, new int[1], array)
 
 DECLARE_DEREFENCE_SHOULD_RETURN_THE_VALUE(UniquePointer)
 DECLARE_STRUCTURE_DEREFERENCE_SHOULD_RETURN_THE_POINTER(UniquePointer)
 DECLARE_OFFSET_ACCESS_OPERATOR_SHOULD_RETURN_THE_VALUE_AT_THE_SPECIFIED_INDEX(UniquePointer)
-DECLARE_BOOL_OPERATOR_SHOULD__CHECK_THE_POINTER_VALIDITY(UniquePointer)
+DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(UniquePointer)
 DECLARE_COMPARISON_OPERATORS_SHOULD_RETURN_THE_RIGHT_VALUE(UniquePointer)
 DECLARE_MAKE_SHOULD_CREATE_A_POINTER(UniquePointer, makeUnique)
 DECLARE_MAKE_ARRAY_SHOULD_CREATE_AN_ARRAY(UniquePointer, makeUniqueArray)

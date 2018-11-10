@@ -5,6 +5,30 @@
 
 #include <gtest/gtest.h>
 
+#define DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass) \
+    _DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, int, element) \
+    _DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, int[], array)
+
+#define _DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, type, prefix) \
+    TEST_F(pointerClass##Tests, prefix##DefaultConstructor_shouldSetThePointerToNullptr) \
+    { \
+        pointerClass<type> pointer; \
+    \
+        EXPECT_EQ(pointer.get(), nullptr); \
+    }
+
+#define DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass) \
+    _DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, int, element) \
+    _DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, int[], array)
+
+#define _DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(pointerClass, type, prefix) \
+    TEST_F(pointerClass##Tests, prefix##NullptrConstructor_shouldSetThePointerToNullptr) \
+    { \
+        pointerClass<int> pointer(nullptr); \
+    \
+        EXPECT_EQ(pointer.get(), nullptr); \
+    }
+
 #define DECLARE_DEREFENCE_SHOULD_RETURN_THE_VALUE(pointerClass) \
     TEST_F(pointerClass##Tests, dereference_shouldReturnTheValue) \
     { \
@@ -35,11 +59,15 @@
         EXPECT_EQ(pointer[1], 5); \
     }
 
-#define DECLARE_BOOL_OPERATOR_SHOULD__CHECK_THE_POINTER_VALIDITY(pointerClass) \
-    TEST_F(pointerClass##Tests, boolOperator_shouldCheckThePointerValidity) \
+#define DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(pointerClass) \
+    _DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(pointerClass, int, new int, element) \
+    _DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(pointerClass, int[], new int[1], )
+
+#define _DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(pointerClass, type, typeInstanciation, prefix) \
+    TEST_F(pointerClass##Tests, prefix##BoolOperator__shouldCheckThePointerValidity) \
     { \
-        pointerClass<int> pointer1; \
-        pointerClass<int> pointer2(new int); \
+        pointerClass<type> pointer1; \
+        pointerClass<type> pointer2(typeInstanciation); \
     \
         if (pointer1) \
         { \

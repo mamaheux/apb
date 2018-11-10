@@ -117,33 +117,6 @@ protected:
     void TearDown() override {}
 };
 
-TEST_F(SharedPointerTests, defaultConstructor_shouldSetThePointerToNullptr)
-{
-    SharedPointer<int> pointer;
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(SharedPointerTests, arrayDefaultConstructor_shouldSetThePointerToNullptr)
-{
-    SharedPointer<int[]> pointer;
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(SharedPointerTests, nullptrConstructor_shouldSetThePointerToNullptr)
-{
-    SharedPointer<int> pointer(nullptr);
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
-
-TEST_F(SharedPointerTests, arrayNullptrConstructor_shouldSetThePointerToNullptr)
-{
-    SharedPointer<int[]> pointer(nullptr);
-
-    EXPECT_EQ(pointer.get(), nullptr);
-}
 
 TEST_F(SharedPointerTests, pointerConstructor_shouldSetThePointerToTheSpecifiedPointer)
 {
@@ -509,7 +482,7 @@ TEST_F(SharedPointerTests, arrayAssignmentOperator_nullptr_shouldDeleteAndIncrea
     EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
-TEST_F(SharedPointerTests, moveAssignmentOperator_shouldDeleteAndSetGiveTheOwnership)
+TEST_F(SharedPointerTests, moveAssignmentOperator_shouldDeleteAndGiveTheOwnership)
 {
     {
         int* valuePointer = new int;
@@ -535,7 +508,7 @@ TEST_F(SharedPointerTests, moveAssignmentOperator_shouldDeleteAndSetGiveTheOwner
     EXPECT_EQ(arrayTDeleterCallCount, 0);
 }
 
-TEST_F(SharedPointerTests, arrayMoveAssignmentOperator_shouldDeleteAndSetGiveTheOwnership)
+TEST_F(SharedPointerTests, arrayMoveAssignmentOperator_shouldDeleteAndGiveTheOwnership)
 {
     {
         int* valuePointer = new int[1];
@@ -561,10 +534,13 @@ TEST_F(SharedPointerTests, arrayMoveAssignmentOperator_shouldDeleteAndSetGiveThe
     EXPECT_EQ(arrayTDeleterCallCount, 2);
 }
 
+DECLARE_DEFAULT_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(SharedPointer)
+DECLARE_NULLPTR_CONSTRUCTOR_SHOULD_SET_THE_POINTER_TO_NULLPTR(SharedPointer)
+
 DECLARE_DEREFENCE_SHOULD_RETURN_THE_VALUE(SharedPointer)
 DECLARE_STRUCTURE_DEREFERENCE_SHOULD_RETURN_THE_POINTER(SharedPointer)
 DECLARE_OFFSET_ACCESS_OPERATOR_SHOULD_RETURN_THE_VALUE_AT_THE_SPECIFIED_INDEX(SharedPointer)
-DECLARE_BOOL_OPERATOR_SHOULD__CHECK_THE_POINTER_VALIDITY(SharedPointer)
+DECLARE_BOOL_OPERATOR_SHOULD_CHECK_THE_POINTER_VALIDITY(SharedPointer)
 DECLARE_COMPARISON_OPERATORS_SHOULD_RETURN_THE_RIGHT_VALUE(SharedPointer)
 DECLARE_MAKE_SHOULD_CREATE_A_POINTER(SharedPointer, makeShared)
 DECLARE_MAKE_ARRAY_SHOULD_CREATE_AN_ARRAY(SharedPointer, makeSharedArray)
