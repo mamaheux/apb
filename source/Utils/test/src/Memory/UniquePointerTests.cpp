@@ -1,13 +1,12 @@
 #include <Utils/Memory/UniquePointer.h>
-#include <Utils/Containers/FixedArray.h>
-#include <Utils/Containers/FixedHeapArray.h>
+#include <Memory/SmartPointerCommonTests.h>
 
 #include <gtest/gtest.h>
 
 using namespace apb;
 using namespace std;
 
-int deleterCallCount;
+static int deleterCallCount;
 
 template <class T>
 class UniquePointerTestsDeleter
@@ -25,7 +24,7 @@ public:
     }
 };
 
-int arrayDeleterCallCount;
+static int arrayDeleterCallCount;
 
 template <class T>
 class UniquePointerTestsDeleter<T[]>
@@ -56,7 +55,7 @@ protected:
         arrayDeleterCallCount = 0;
     }
 
-    virtual void TearDown() override {}
+    void TearDown() override {}
 };
 
 TEST_F(UniquePointerTests, defaultConstructor_shouldSetThePointerToNullptr)
@@ -233,148 +232,10 @@ TEST_F(UniquePointerTests, arrayMoveAssignmentOperator_shouldDeleteAndSetGiveThe
     EXPECT_EQ(arrayDeleterCallCount, 2);
 }
 
-TEST_F(UniquePointerTests, dereference_shouldReturnTheValue)
-{
-    int* valuePointer = new int;
-    *valuePointer = 10;
-    UniquePointer<int> pointer(valuePointer);
-
-    EXPECT_EQ(*pointer, 10);
-}
-
-TEST_F(UniquePointerTests, structureDereference_shouldReturnThePointer)
-{
-    UniquePointer<FixedArray<int, 1>> pointer(new FixedArray<int, 1>);
-
-    EXPECT_EQ(pointer->size(), 1);
-}
-
-TEST_F(UniquePointerTests, offsetAccessOperator_shouldReturnTheValueAtTheSpecifiedIndex)
-{
-    int* valuesPointer = new int[2];
-    valuesPointer[0] = 2;
-    valuesPointer[1] = 5;
-    UniquePointer<int[]> pointer(valuesPointer);
-
-    EXPECT_EQ(pointer[0], 2);
-    EXPECT_EQ(pointer[1], 5);
-}
-
-TEST_F(UniquePointerTests, boolOperator_shouldCheckThePointerValidity)
-{
-    UniquePointer<int> pointer1;
-    UniquePointer<int> pointer2(new int);
-
-    if (pointer1)
-    {
-        FAIL();
-    }
-    else
-    {
-        SUCCEED();
-    }
-
-    if (!pointer2)
-    {
-        FAIL();
-    }
-    else
-    {
-        SUCCEED();
-    }
-}
-
-TEST_F(UniquePointerTests, comparisonOperators_shouldDoReturnTheRigthValues)
-{
-    UniquePointer<int> pointer1(new int);
-    UniquePointer<int> pointer2(new int);
-    UniquePointer<int[]> pointer3(new int[2]);
-    UniquePointer<int[]> pointer4(new int[2]);
-
-    EXPECT_TRUE(pointer1 == pointer1);
-    EXPECT_TRUE(pointer1 == pointer1.get());
-    EXPECT_TRUE(pointer1.get() == pointer1);
-    EXPECT_FALSE(pointer1 == nullptr);
-
-    EXPECT_TRUE(pointer1 != pointer2);
-    EXPECT_TRUE(pointer1 != pointer2.get());
-    EXPECT_TRUE(pointer1.get() != pointer2);
-    EXPECT_TRUE(pointer1 != nullptr);
-
-    EXPECT_TRUE(pointer3 == pointer3);
-    EXPECT_TRUE(pointer3 == pointer3.get());
-    EXPECT_TRUE(pointer3.get() == pointer3);
-    EXPECT_FALSE(pointer3 == nullptr);
-
-    EXPECT_TRUE(pointer3 != pointer4);
-    EXPECT_TRUE(pointer3 != pointer4.get());
-    EXPECT_TRUE(pointer3.get() != pointer4);
-    EXPECT_TRUE(pointer3 != nullptr);
-
-    EXPECT_EQ(pointer1 < pointer2, pointer1.get() < pointer2.get());
-    EXPECT_EQ(pointer1 < pointer2.get(), pointer1.get() < pointer2.get());
-    EXPECT_EQ(pointer1.get() < pointer2, pointer1.get() < pointer2.get());
-    EXPECT_EQ(pointer1 < nullptr, pointer1.get() < nullptr);
-    EXPECT_EQ(nullptr < pointer2, nullptr < pointer2.get());
-
-    EXPECT_EQ(pointer3 < pointer4, pointer3.get() < pointer4.get());
-    EXPECT_EQ(pointer3 < pointer4.get(), pointer3.get() < pointer4.get());
-    EXPECT_EQ(pointer3.get() < pointer4, pointer3.get() < pointer4.get());
-    EXPECT_EQ(pointer3 < nullptr, pointer3.get() < nullptr);
-    EXPECT_EQ(nullptr < pointer4, nullptr < pointer4.get());
-
-    EXPECT_EQ(pointer1 <= pointer2, pointer1.get() <= pointer2.get());
-    EXPECT_EQ(pointer1 <= pointer2.get(), pointer1.get() <= pointer2.get());
-    EXPECT_EQ(pointer1.get() <= pointer2, pointer1.get() <= pointer2.get());
-    EXPECT_EQ(pointer1 <= nullptr, pointer1.get() <= nullptr);
-    EXPECT_EQ(nullptr <= pointer2, nullptr <= pointer2.get());
-
-    EXPECT_EQ(pointer3 <= pointer4, pointer3.get() <= pointer4.get());
-    EXPECT_EQ(pointer3 <= pointer4.get(), pointer3.get() <= pointer4.get());
-    EXPECT_EQ(pointer3.get() <= pointer4, pointer3.get() <= pointer4.get());
-    EXPECT_EQ(pointer3 <= nullptr, pointer3.get() <= nullptr);
-    EXPECT_EQ(nullptr <= pointer4, nullptr <= pointer4.get());
-
-    EXPECT_EQ(pointer1 > pointer2, pointer1.get() > pointer2.get());
-    EXPECT_EQ(pointer1 > pointer2.get(), pointer1.get() > pointer2.get());
-    EXPECT_EQ(pointer1.get() > pointer2, pointer1.get() > pointer2.get());
-    EXPECT_EQ(pointer1 > nullptr, pointer1.get() > nullptr);
-    EXPECT_EQ(nullptr > pointer2, nullptr > pointer2.get());
-
-    EXPECT_EQ(pointer3 > pointer4, pointer3.get() > pointer4.get());
-    EXPECT_EQ(pointer3 > pointer4.get(), pointer3.get() > pointer4.get());
-    EXPECT_EQ(pointer3.get() > pointer4, pointer3.get() > pointer4.get());
-    EXPECT_EQ(pointer3 > nullptr, pointer3.get() > nullptr);
-    EXPECT_EQ(nullptr > pointer4, nullptr > pointer4.get());
-
-    EXPECT_EQ(pointer1 >= pointer2, pointer1.get() >= pointer2.get());
-    EXPECT_EQ(pointer1 >= pointer2.get(), pointer1.get() >= pointer2.get());
-    EXPECT_EQ(pointer1.get() >= pointer2, pointer1.get() >= pointer2.get());
-    EXPECT_EQ(pointer1 >= nullptr, pointer1.get() >= nullptr);
-    EXPECT_EQ(nullptr >= pointer2, nullptr >= pointer2.get());
-
-    EXPECT_EQ(pointer3 >= pointer4, pointer3.get() >= pointer4.get());
-    EXPECT_EQ(pointer3 >= pointer4.get(), pointer3.get() >= pointer4.get());
-    EXPECT_EQ(pointer3.get() >= pointer4, pointer3.get() >= pointer4.get());
-    EXPECT_EQ(pointer3 >= nullptr, pointer3.get() >= nullptr);
-    EXPECT_EQ(nullptr >= pointer4, nullptr >= pointer4.get());
-}
-
-TEST_F(UniquePointerTests, makeUnique_shouldCreateAPointer)
-{
-    UniquePointer<int> pointer = makeUnique<int>(10);
-
-    ASSERT_NE(pointer, nullptr);
-    EXPECT_EQ(*pointer, 10);
-}
-
-TEST_F(UniquePointerTests, makeUniqueArray_shouldCreateAnArray)
-{
-    UniquePointer<int[]> pointer = makeUniqueArray<int>(2);
-    pointer[0] = 1;
-    pointer[1] = 2;
-
-    ASSERT_NE(pointer, nullptr);
-    EXPECT_EQ(pointer[0], 1);
-    EXPECT_EQ(pointer[1], 2);
-}
+DECLARE_DEREFENCE_SHOULD_RETURN_THE_VALUE(UniquePointer)
+DECLARE_STRUCTURE_DEREFERENCE_SHOULD_RETURN_THE_POINTER(UniquePointer)
+DECLARE_OFFSET_ACCESS_OPERATOR_SHOULD_RETURN_THE_VALUE_AT_THE_SPECIFIED_INDEX(UniquePointer)
+DECLARE_BOOL_OPERATOR_SHOULD__CHECK_THE_POINTER_VALIDITY(UniquePointer)
+DECLARE_COMPARISON_OPERATORS_SHOULD_RETURN_THE_RIGHT_VALUE(UniquePointer)
+DECLARE_MAKE_SHOULD_CREATE_A_POINTER(UniquePointer, makeUnique)
+DECLARE_MAKE_ARRAY_SHOULD_CREATE_AN_ARRAY(UniquePointer, makeUniqueArray)

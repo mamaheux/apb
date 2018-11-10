@@ -2,6 +2,7 @@
 #define UNIQUE_POINTER_H
 
 #include <Utils/Memory/DefaultDeleter.h>
+#include <Utils/Memory/SmartPointerCommon.h>
 
 #include <cstddef>
 #include <utility>
@@ -97,7 +98,7 @@ namespace apb
     }
 
     template <class T, class Deleter, class Derived>
-    UniquePointerCommon<T, Deleter, Derived>::operator bool()
+    inline UniquePointerCommon<T, Deleter, Derived>::operator bool()
     {
         return m_pointer != nullptr;
     }
@@ -223,198 +224,22 @@ namespace apb
         return this->m_pointer[i];
     }
 
-    template <class T, class Deleter>
-    inline bool operator==(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() == right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator!=(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() != right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() < right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<=(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() <= right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() > right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>=(const UniquePointer<T, Deleter>& left, const UniquePointer<T, Deleter>& right)
-    {
-        return left.get() >= right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator==(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() == right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator!=(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() != right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() < right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<=(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() <= right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() > right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>=(const UniquePointer<T, Deleter>& left, typename UniquePointer<T, Deleter>::PointerType right)
-    {
-        return left.get() >= right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator==(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left == right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator!=(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left != right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left < right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<=(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left <= right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left > right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>=(typename UniquePointer<T, Deleter>::PointerType left, const UniquePointer<T, Deleter>& right)
-    {
-        return left >= right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator==(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() == right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator!=(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() != right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() < right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<=(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() <= right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() > right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>=(const UniquePointer<T, Deleter>& left, std::nullptr_t right)
-    {
-        return left.get() >= right;
-    }
-
-    template <class T, class Deleter>
-    inline bool operator==(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left == right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator!=(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left != right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left < right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator<=(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left <= right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left > right.get();
-    }
-
-    template <class T, class Deleter>
-    inline bool operator>=(std::nullptr_t left, const UniquePointer<T, Deleter>& right)
-    {
-        return left >= right.get();
-    }
-
-    template<class T, class ... Types>
+    template <class T, class ... Types>
     inline UniquePointer<T> makeUnique(Types ... args)
     {
         static_assert(!std::is_array<T>::value, "Use makeUniqueArray instead");
         return UniquePointer<T>(new T(args ...));
     }
 
-    template<class T>
+    template <class T>
     inline UniquePointer<T[]> makeUniqueArray(std::size_t size)
     {
         return UniquePointer<T[]>(new T[size]);
     }
+
+    DECLARE_SMART_POINTER_COMPARAISON_OPERATORS(
+        template <class T COMMA class Deleter>,
+        UniquePointer<T COMMA Deleter>)
 }
 
 #endif
