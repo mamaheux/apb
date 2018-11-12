@@ -21,7 +21,7 @@ The ultimate goal is to develop a portable device that is able to replace Blueto
 This contains everything related to signal processing such as FIR and IIR filters.
 
 ### Utils
-This contains everything related to data structure, memory management, optimization and math.
+This contains everything related to data structures, memory management, optimization and mathematics.
 
 ## Setup
 
